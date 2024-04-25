@@ -9,3 +9,6 @@ Set up docker desktop as described for your OS [here](https://docs.docker.com/de
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## CI
+CI is managed by github actions, configured in .github/workflows.
