@@ -1,0 +1,22 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "staging-app"
+region = "us-east-3"
+capabilities = "CAPABILITY_IAM"
+profile = "staging-profile"
+
+[default.build]
+[default.build.parameters]
+beta_features = "true"
+Cached="true"
+Parallel="true"
+
+[prod]
+[prod.deploy]
+[prod.deploy.parameters]
+stack_name = "production-app"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+profile = "prod-profile"
