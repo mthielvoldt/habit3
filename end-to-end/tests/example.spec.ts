@@ -7,15 +7,21 @@ test.describe("home page", () => {
     // Expect a title "to contain" a substring.
     await expect(page).toHaveTitle(/Habit 3/);
   });
+
+  test('role bar present', async ({ page }) => {
+    page.goto('http://localhost:3000/home');
+    await expect(page.getByTitle("roles sidebar")).toBeVisible();
+
+  });
   
-  test('get started link', async ({ page }) => {
+  test.skip('add rock', async ({ page }) => {
     await page.goto('http://localhost:3000/home');
   
-    // Click the get started link.
-    await page.getByRole('link', { name: 'Get started' }).click();
+    // Click the "Add Rock" button.
+    await page.getByRole('button', { name: 'Add Rock' }).click();
   
-    // Expects page to have a heading with the name of Installation.
-    await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+    // Expects page to have a text input for the new rock's name.
+    await expect(page.getByRole('textbox', { name: 'new-rock' })).toBeVisible();
   });
 })
 
