@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "../style.css";
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './Header';
 import RoleBar from './RoleBar';
+import './App.css';
 
 function App() {
   const [roles, setRoles] = useState([

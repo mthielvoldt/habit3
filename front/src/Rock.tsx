@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 
-function Rock({ text }) {
-  const [isEditing, setIsEditing] = useState(false);
+const Rock = ({ text, isEditing }) => {
   const [rockText, setRockText] = useState(text);
 
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
-  };
+  useEffect(() => {
+    if (!isEditing) {
+      setRockText(text);
+    }
+  }, [isEditing, text]);
 
   const handleChange = (e) => {
     setRockText(e.target.value);
@@ -14,12 +15,6 @@ function Rock({ text }) {
 
   return (
     <div className="rock d-flex align-items-center mb-2">
-      <button
-        onClick={handleEditClick}
-        className="btn btn-sm btn-secondary mr-2"
-      >
-        {isEditing ? "Save" : "Edit"}
-      </button>
       {isEditing ? (
         <input
           type="text"
