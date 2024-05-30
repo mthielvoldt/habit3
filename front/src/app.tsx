@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../style.css";
-import Rock from "./Rock"
+import Role from './Role';
 
 function App() {
   const [state, setState] = useState(0);
+
+  const roles = [
+    { roleTitle: 'Role 1', rocks: [{ text: 'Rock 1' }, { text: 'Rock 2' }] },
+    { roleTitle: 'Role 2', rocks: [{ text: 'Rock 1' }] },
+  ];
 
   return (
     <div className="App">
@@ -79,15 +84,9 @@ function App() {
             <button className="btn btn-primary btn-sm">Add Role</button>
           </div>
           <div className="p-3">
-            <div className="role">
-              <div className="role-header font-weight-bold mb-2">Role 1</div>
-              <Rock text="Rock 1" />
-              <Rock text="Rock 2" />
-            </div>
-            <div className="role mt-3">
-              <div className="role-header font-weight-bold mb-2">Role 2</div>
-              <Rock text="Rock 1" />
-            </div>
+            {roles.map((role, index) => (
+              <Role key={index} roleTitle={role.roleTitle} rocks={role.rocks} />
+            ))}
           </div>
         </aside>
 

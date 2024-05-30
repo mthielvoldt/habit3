@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Rock = ({ text }) => {
+function Rock({ text }) {
   const [isEditing, setIsEditing] = useState(false);
   const [rockText, setRockText] = useState(text);
 
