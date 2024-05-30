@@ -19,11 +19,6 @@ const Role = ({ role, isEditing, updateRoleTitle, addRock, updateRockText }) => 
         ) : (
           <span className="font-weight-bold">{role.roleTitle}</span>
         )}
-        {isEditing && (
-          <button className="btn btn-primary btn-sm" onClick={() => addRock(role.id)}>
-            Add Rock
-          </button>
-        )}
       </div>
       <div className="role-rocks">
         {role.rocks.map(rock => (
@@ -34,6 +29,11 @@ const Role = ({ role, isEditing, updateRoleTitle, addRock, updateRockText }) => 
             updateRockText={(newText) => updateRockText(role.id, rock.id, newText)}
           />
         ))}
+        {isEditing && (
+          <button className="btn btn-primary btn-sm mt-2" onClick={() => addRock(role.id)}>
+            Add Rock
+          </button>
+        )}
       </div>
     </div>
   );
