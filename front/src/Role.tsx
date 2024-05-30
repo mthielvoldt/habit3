@@ -1,23 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Rock from './Rock';
 
-const Role = ({ roleTitle, rocks, isEditing }) => {
-  const [roleRocks, setRoleRocks] = useState(rocks);
-  const [title, setTitle] = useState(roleTitle);
-
-  useEffect(() => {
-    if (!isEditing) {
-      setTitle(roleTitle);
-    }
-  }, [isEditing, roleTitle]);
-
-  const addRock = () => {
-    const newRock = { text: `New Rock ${roleRocks.length + 1}` };
-    setRoleRocks([...roleRocks, newRock]);
-  };
-
+const Role = ({ role, isEditing, updateRoleTitle, addRock, updateRockText }) => {
   const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+    updateRoleTitle(role.id, e.target.value);
   };
 
   return (
@@ -26,22 +12,27 @@ const Role = ({ roleTitle, rocks, isEditing }) => {
         {isEditing ? (
           <input
             type="text"
-            value={title}
+            value={role.roleTitle}
             onChange={handleTitleChange}
             className="form-control"
           />
         ) : (
-          <span className="font-weight-bold">{title}</span>
+          <span className="font-weight-bold">{role.roleTitle}</span>
         )}
         {isEditing && (
-          <button className="btn btn-primary btn-sm" onClick={addRock}>
+          <button className="btn btn-primary btn-sm" onClick={() => addRock(role.id)}>
             Add Rock
           </button>
         )}
       </div>
       <div className="role-rocks">
-        {roleRocks.map((rock, index) => (
-          <Rock key={index} text={rock.text} isEditing={isEditing} />
+        {role.rocks.map(rock => (
+          <Rock
+            key={rock.id}
+            rock={rock}
+            isEditing={isEditing}
+            updateRockText={(newText) => updateRockText(role.id, rock.id, newText)}
+          />
         ))}
       </div>
     </div>

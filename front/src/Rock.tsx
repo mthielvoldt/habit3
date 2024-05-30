@@ -1,16 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const Rock = ({ text, isEditing }) => {
-  const [rockText, setRockText] = useState(text);
-
-  useEffect(() => {
-    if (!isEditing) {
-      setRockText(text);
-    }
-  }, [isEditing, text]);
-
+const Rock = ({ rock, isEditing, updateRockText }) => {
   const handleChange = (e) => {
-    setRockText(e.target.value);
+    updateRockText(e.target.value);
   };
 
   return (
@@ -18,12 +10,12 @@ const Rock = ({ text, isEditing }) => {
       {isEditing ? (
         <input
           type="text"
-          value={rockText}
+          value={rock.text}
           onChange={handleChange}
           className="form-control"
         />
       ) : (
-        <p className="mb-0">{rockText}</p>
+        <p className="mb-0">{rock.text}</p>
       )}
     </div>
   );

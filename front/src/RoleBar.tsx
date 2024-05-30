@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Role from './Role';
 
-const RoleBar = ({ roles, addRole }) => {
+const RoleBar = ({ roles, addRole, updateRoleTitle, addRock, updateRockText }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEditing = () => {
@@ -17,8 +17,15 @@ const RoleBar = ({ roles, addRole }) => {
         </button>
       </div>
       <div className="p-3">
-        {roles.map((role, index) => (
-          <Role key={index} roleTitle={role.roleTitle} rocks={role.rocks} isEditing={isEditing} />
+        {roles.map(role => (
+          <Role
+            key={role.id}
+            role={role}
+            isEditing={isEditing}
+            updateRoleTitle={updateRoleTitle}
+            addRock={addRock}
+            updateRockText={updateRockText}
+          />
         ))}
         {isEditing && (
           <div className="mt-3">
