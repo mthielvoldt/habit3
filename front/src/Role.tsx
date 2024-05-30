@@ -33,9 +33,11 @@ const Role = ({ roleTitle, rocks, isEditing }) => {
         ) : (
           <span className="font-weight-bold">{title}</span>
         )}
-        <button className="btn btn-primary btn-sm" onClick={addRock}>
-          Add Rock
-        </button>
+        {isEditing && (
+          <button className="btn btn-primary btn-sm" onClick={addRock}>
+            Add Rock
+          </button>
+        )}
       </div>
       <div className="role-rocks">
         {roleRocks.map((rock, index) => (

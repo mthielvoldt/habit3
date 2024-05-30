@@ -16,7 +16,9 @@ const RoleBar = ({ roles, addRole }) => {
           <button className="btn btn-secondary btn-sm mr-2" onClick={toggleEditing}>
             {isEditing ? 'Stop Editing' : 'Edit All'}
           </button>
-          <button className="btn btn-primary btn-sm" onClick={addRole}>Add Role</button>
+          {isEditing && (
+            <button className="btn btn-primary btn-sm" onClick={addRole}>Add Role</button>
+          )}
         </div>
       </div>
       <div className="p-3">
