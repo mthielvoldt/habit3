@@ -23,6 +23,10 @@ function App() {
     setRoles(roles.map(role => (role.id === roleId ? { ...role, roleTitle: newTitle } : role)));
   };
 
+  const deleteRole = (roleId) => {
+    setRoles(roles.filter(role => role.id !== roleId));
+  };
+
   const addRock = (roleId) => {
     setRoles(roles.map(role => {
       if (role.id === roleId) {
@@ -43,6 +47,16 @@ function App() {
     }));
   };
 
+  const deleteRock = (roleId, rockId) => {
+    setRoles(roles.map(role => {
+      if (role.id === roleId) {
+        const updatedRocks = role.rocks.filter(rock => rock.id !== rockId);
+        return { ...role, rocks: updatedRocks };
+      }
+      return role;
+    }));
+  };
+
   return (
     <div className="App">
       <Header />
@@ -51,8 +65,10 @@ function App() {
           roles={roles}
           addRole={addRole}
           updateRoleTitle={updateRoleTitle}
+          deleteRole={deleteRole}
           addRock={addRock}
           updateRockText={updateRockText}
+          deleteRock={deleteRock}
         />
         <main id="main-content" className="container mt-4">
           <h1>Welcome to your Weekly Planner</h1>

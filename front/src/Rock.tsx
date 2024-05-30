@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Rock = ({ rock, isEditing, updateRockText }) => {
+const Rock = ({ rock, isEditing, updateRockText, deleteRock }) => {
   const handleChange = (e) => {
     updateRockText(e.target.value);
   };
@@ -15,7 +15,12 @@ const Rock = ({ rock, isEditing, updateRockText }) => {
           className="form-control"
         />
       ) : (
-        <p className="mb-0">{rock.text}</p>
+        <p className="mb-0 flex-grow-1">{rock.text}</p>
+      )}
+      {isEditing && (
+        <button className="btn btn-danger btn-sm ml-2" onClick={deleteRock}>
+          Delete
+        </button>
       )}
     </div>
   );

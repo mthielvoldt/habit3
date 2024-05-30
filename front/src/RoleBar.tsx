@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Role from './Role';
 
-const RoleBar = ({ roles, addRole, updateRoleTitle, addRock, updateRockText }) => {
+const RoleBar = ({ roles, addRole, updateRoleTitle, deleteRole, addRock, updateRockText, deleteRock }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEditing = () => {
@@ -23,8 +23,10 @@ const RoleBar = ({ roles, addRole, updateRoleTitle, addRock, updateRockText }) =
             role={role}
             isEditing={isEditing}
             updateRoleTitle={updateRoleTitle}
+            deleteRole={deleteRole}
             addRock={addRock}
             updateRockText={updateRockText}
+            deleteRock={deleteRock}
           />
         ))}
         {isEditing && (
