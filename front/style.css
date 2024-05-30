@@ -40,6 +40,9 @@ body {
 }
 
 .role-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-weight: bold;
   margin: 0.5rem 0;
 }
