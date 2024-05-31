@@ -4,11 +4,13 @@ import Header from './Header';
 import RoleBar from './RoleBar';
 import './App.css';
 
+export const initial_state = [
+  { id: 1, roleTitle: 'Role 1', rocks: [{ id: 1, text: 'Rock 1' }, { id: 2, text: 'Rock 2' }] },
+  { id: 2, roleTitle: 'Role 2', rocks: [{ id: 3, text: 'Rock 1' }] },
+];
+
 function App() {
-  const [roles, setRoles] = useState([
-    { id: 1, roleTitle: 'Role 1', rocks: [{ id: 1, text: 'Rock 1' }, { id: 2, text: 'Rock 2' }] },
-    { id: 2, roleTitle: 'Role 2', rocks: [{ id: 3, text: 'Rock 1' }] },
-  ]);
+  const [roles, setRoles] = useState(initial_state);
 
   const addRole = () => {
     const newRole = {
