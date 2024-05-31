@@ -53,3 +53,32 @@ export default function rolesReducer(roles, action) {
     };
   }
 }
+
+export function addRoleAction() {
+  return { type: "addRole" };
+}
+
+export function updateRoleTitleAction(roleId, newTitle) {
+  return { type: "updateRoleTitle", roleId: roleId, newTitle: newTitle };
+};
+
+export function deleteRoleAction(roleId) {
+  return { type: "deleteRole", roleId: roleId };
+};
+
+export function addRockAction(roleId) {
+  return { type: "addRock", roleId: roleId };
+};
+
+export function updateRockTextAction(roleId, rockId, newText) {
+  return { type: "updateRockText", roleId: roleId, rockId: rockId, newText: newText };
+};
+
+export function deleteRockAction(roleId, rockId) {
+  return { type: "deleteRock", roleId: roleId, rockId: rockId };
+};
+
+
+// export function (roleId) {
+//   return { type: "", roleId: roleId, };
+// };

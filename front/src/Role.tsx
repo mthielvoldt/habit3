@@ -1,31 +1,16 @@
 import React from 'react';
 import Rock from './Rock';
+import { updateRoleTitleAction, deleteRoleAction, addRockAction, deleteRockAction, updateRockTextAction } from './rolesReducer';
 
 const Role = ({ role, isEditing, dispatch }) => {
 
   // adds roll id
   const handleTitleChange = (e) => {
-    updateRoleTitle(role.id, e.target.value);
-  };
-
-  const updateRoleTitle = (roleId, newTitle) => {
-    dispatch({type: "updateRoleTitle", roleId: roleId, newTitle: newTitle})
-  };
-
-  const deleteRole = (roleId) => {
-    dispatch({type: "deleteRole", roleId: roleId});
-  };
-
-  const addRock = (roleId) => {
-    dispatch({type: "addRock", roleId: roleId});
-  };
-
-  const deleteRock = (roleId, rockId) => {
-    dispatch({type: "deleteRock", roleId: roleId, rockId: rockId});
+    dispatch(updateRoleTitleAction(role.id, e.target.value));
   };
 
   const updateRockText = (rockId, newText) => {
-    dispatch({type: "updateRockText", roleId: role.id, rockId: rockId, newText: newText});
+    dispatch(updateRockTextAction(role.id, rockId, newText));
   };
 
   return (
@@ -42,7 +27,7 @@ const Role = ({ role, isEditing, dispatch }) => {
           <span className="font-weight-bold">{role.roleTitle}</span>
         )}
         {isEditing && (
-          <button className="btn btn-danger btn-sm ml-2" onClick={() => deleteRole(role.id)}>
+          <button className="btn btn-danger btn-sm ml-2" onClick={() => dispatch(deleteRoleAction(role.id))}>
             Delete
           </button>
         )}
@@ -54,11 +39,11 @@ const Role = ({ role, isEditing, dispatch }) => {
             rock={rock}
             isEditing={isEditing}
             updateRockText={updateRockText}
-            deleteRock={() => deleteRock(role.id, rock.id)}
+            deleteRock={() => dispatch(deleteRockAction(role.id, rock.id))}
           />
         ))}
         {isEditing && (
-          <button className="btn btn-primary btn-sm mt-2" onClick={() => addRock(role.id)}>
+          <button className="btn btn-primary btn-sm mt-2" onClick={() => dispatch(addRockAction(role.id))}>
             Add Rock
           </button>
         )}

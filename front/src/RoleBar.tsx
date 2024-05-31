@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Role from './Role';
+import { addRoleAction } from './rolesReducer';
 
 const RoleBar = ({ roles, dispatch }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -8,8 +9,8 @@ const RoleBar = ({ roles, dispatch }) => {
     setIsEditing(!isEditing);
   };
 
-  const addRole = () => {
-    dispatch({ type: "addRole"});
+  function addRole() {
+    dispatch(addRoleAction());
   };
 
   return (
