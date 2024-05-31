@@ -21,7 +21,12 @@ export default function rolesReducer(roles, action) {
     case "addRock": {
       return roles.map(role => {
         if (role.id === action.roleId) {
-          const newRock = { id: role.rocks.length + 1, text: `New Rock ${role.rocks.length + 1}` };
+
+          // Find the highest rock ID in this role.
+          const maxRockId = role.rocks.reduce((maxRockId, rock) => Math.max(maxRockId, rock.id), 1);
+          // The new rock should have one above that. 
+          const newRockId = maxRockId + 1;
+          const newRock = { id: newRockId, text: `Rock ${newRockId}` };
           return { ...role, rocks: [...role.rocks, newRock] };
         }
         return role;
