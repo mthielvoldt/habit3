@@ -21,8 +21,7 @@ describe("Rock+Roll state modifiers", () => {
     let uniqueRockIds = new Set();
     roles[0].rocks.forEach(rock => { uniqueRockIds.add(rock.id) });
 
-    console.log(roles[0].rocks)
+    // console.log(roles[0].rocks)
     expect(uniqueRockIds.size).toBe(2);
-
   });
 });

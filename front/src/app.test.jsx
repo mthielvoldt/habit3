@@ -3,8 +3,8 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, test, expect } from "vitest";
 import App, { initial_state } from "./app";
 
-describe("Rock+Roll state modifiers", () => {
-  test("avoid re-using rock ID's following rock deletion.", () => {
+describe("Role bar controls", () => {
+  test("Add and Remove rocks correctly.", () => {
     // render App
     // delete the first rock from a role with 2 rocks.
     // call addRock
@@ -38,8 +38,7 @@ describe("Rock+Roll state modifiers", () => {
       (uniqueRockIds, rock) => {return uniqueRockIds.add(rock.dataset.key)},
       new Set()
     );
-    console.log(uniqueRockIds)
-
+    // console.log(uniqueRockIds);
     expect(uniqueRockIds.size).toBe(2); // Ensure the rock IDs are unique
   });
 });
