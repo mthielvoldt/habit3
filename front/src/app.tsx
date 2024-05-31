@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './Header';
 import RoleBar from './RoleBar';
 import './App.css';
+import rolesReducer from './rolesReducer';
 
 export const initial_state = [
   { id: 1, roleTitle: 'Role 1', rocks: [{ id: 1, text: 'Rock 1' }, { id: 2, text: 'Rock 2' }] },
@@ -10,53 +11,30 @@ export const initial_state = [
 ];
 
 function App() {
-  const [roles, setRoles] = useState(initial_state);
+  const [roles, dispatch] = useReducer(rolesReducer, initial_state);
 
   const addRole = () => {
-    const newRole = {
-      id: roles.length + 1,
-      roleTitle: `Role ${roles.length + 1}`,
-      rocks: [],
-    };
-    setRoles([...roles, newRole]);
+    dispatch({ type: "addRole"});
   };
 
   const updateRoleTitle = (roleId, newTitle) => {
-    setRoles(roles.map(role => (role.id === roleId ? { ...role, roleTitle: newTitle } : role)));
+    dispatch({type: "updateRoleTitle", roleId: roleId, newTitle: newTitle})
   };
 
   const deleteRole = (roleId) => {
-    setRoles(roles.filter(role => role.id !== roleId));
+    dispatch({type: "deleteRole", roleId: roleId});
   };
 
   const addRock = (roleId) => {
-    setRoles(roles.map(role => {
-      if (role.id === roleId) {
-        const newRock = { id: role.rocks.length + 1, text: `New Rock ${role.rocks.length + 1}` };
-        return { ...role, rocks: [...role.rocks, newRock] };
-      }
-      return role;
-    }));
+    dispatch({type: "addRock", roleId: roleId});
   };
 
   const updateRockText = (roleId, rockId, newText) => {
-    setRoles(roles.map(role => {
-      if (role.id === roleId) {
-        const updatedRocks = role.rocks.map(rock => (rock.id === rockId ? { ...rock, text: newText } : rock));
-        return { ...role, rocks: updatedRocks };
-      }
-      return role;
-    }));
+    dispatch({type: "updateRockText", roleId: roleId, rockId: rockId, newText: newText});
   };
 
   const deleteRock = (roleId, rockId) => {
-    setRoles(roles.map(role => {
-      if (role.id === roleId) {
-        const updatedRocks = role.rocks.filter(rock => rock.id !== rockId);
-        return { ...role, rocks: updatedRocks };
-      }
-      return role;
-    }));
+    dispatch({type: "deleteRock", roleId: roleId, rockId: rockId});
   };
 
   return (
@@ -65,6 +43,7 @@ function App() {
       <div id="content" className="d-flex">
         <RoleBar
           roles={roles}
+          roleStateDispatch = {dispatch}
           addRole={addRole}
           updateRoleTitle={updateRoleTitle}
           deleteRole={deleteRole}
