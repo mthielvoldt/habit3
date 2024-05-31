@@ -1,9 +1,31 @@
 import React from 'react';
 import Rock from './Rock';
 
-const Role = ({ role, isEditing, updateRoleTitle, deleteRole, addRock, updateRockText, deleteRock }) => {
+const Role = ({ role, isEditing, dispatch }) => {
+
+  // adds roll id
   const handleTitleChange = (e) => {
     updateRoleTitle(role.id, e.target.value);
+  };
+
+  const updateRoleTitle = (roleId, newTitle) => {
+    dispatch({type: "updateRoleTitle", roleId: roleId, newTitle: newTitle})
+  };
+
+  const deleteRole = (roleId) => {
+    dispatch({type: "deleteRole", roleId: roleId});
+  };
+
+  const addRock = (roleId) => {
+    dispatch({type: "addRock", roleId: roleId});
+  };
+
+  const deleteRock = (roleId, rockId) => {
+    dispatch({type: "deleteRock", roleId: roleId, rockId: rockId});
+  };
+
+  const updateRockText = (rockId, newText) => {
+    dispatch({type: "updateRockText", roleId: role.id, rockId: rockId, newText: newText});
   };
 
   return (
@@ -31,7 +53,7 @@ const Role = ({ role, isEditing, updateRoleTitle, deleteRole, addRock, updateRoc
             key={rock.id}
             rock={rock}
             isEditing={isEditing}
-            updateRockText={(newText) => updateRockText(role.id, rock.id, newText)}
+            updateRockText={updateRockText}
             deleteRock={() => deleteRock(role.id, rock.id)}
           />
         ))}

@@ -13,43 +13,13 @@ export const initial_state = [
 function App() {
   const [roles, dispatch] = useReducer(rolesReducer, initial_state);
 
-  const addRole = () => {
-    dispatch({ type: "addRole"});
-  };
-
-  const updateRoleTitle = (roleId, newTitle) => {
-    dispatch({type: "updateRoleTitle", roleId: roleId, newTitle: newTitle})
-  };
-
-  const deleteRole = (roleId) => {
-    dispatch({type: "deleteRole", roleId: roleId});
-  };
-
-  const addRock = (roleId) => {
-    dispatch({type: "addRock", roleId: roleId});
-  };
-
-  const updateRockText = (roleId, rockId, newText) => {
-    dispatch({type: "updateRockText", roleId: roleId, rockId: rockId, newText: newText});
-  };
-
-  const deleteRock = (roleId, rockId) => {
-    dispatch({type: "deleteRock", roleId: roleId, rockId: rockId});
-  };
-
   return (
     <div className="App">
       <Header />
       <div id="content" className="d-flex">
         <RoleBar
           roles={roles}
-          roleStateDispatch = {dispatch}
-          addRole={addRole}
-          updateRoleTitle={updateRoleTitle}
-          deleteRole={deleteRole}
-          addRock={addRock}
-          updateRockText={updateRockText}
-          deleteRock={deleteRock}
+          dispatch={dispatch}
         />
         <main id="main-content" className="container mt-4">
           <h1>Welcome to your Weekly Planner</h1>

@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import Role from './Role';
 
-const RoleBar = ({ roles, addRole, updateRoleTitle, deleteRole, addRock, updateRockText, deleteRock }) => {
+const RoleBar = ({ roles, dispatch }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
+  };
+
+  const addRole = () => {
+    dispatch({ type: "addRole"});
   };
 
   return (
@@ -22,11 +26,7 @@ const RoleBar = ({ roles, addRole, updateRoleTitle, deleteRole, addRock, updateR
             key={role.id}
             role={role}
             isEditing={isEditing}
-            updateRoleTitle={updateRoleTitle}
-            deleteRole={deleteRole}
-            addRock={addRock}
-            updateRockText={updateRockText}
-            deleteRock={deleteRock}
+            dispatch={dispatch}
           />
         ))}
         {isEditing && (

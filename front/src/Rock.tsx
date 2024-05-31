@@ -2,7 +2,7 @@ import React from 'react';
 
 const Rock = ({ rock, isEditing, updateRockText, deleteRock }) => {
   const handleChange = (e) => {
-    updateRockText(e.target.value);
+    updateRockText(rock.id, e.target.value);
   };
 
   return (
