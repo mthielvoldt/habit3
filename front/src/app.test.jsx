@@ -1,22 +1,25 @@
 import React from "react";
 import { render, cleanup, fireEvent, within } from '@testing-library/react';
+// import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import App, { initial_state } from "./app";
+import { mockRoles } from "../mockData";
 
 describe("Role bar controls", () => {
 
   const setupTimeoutMs = 200;
   function setup() {
-    render(<App />);
+    render(<App initialRoles={mockRoles}/>);
+    // const user = userEvent.setup();
     // Ensure the initial state
     const editing_btn = document.getElementById('editing-btn');
+    // user.click(editing_btn);
     fireEvent.click(editing_btn)
   }
   beforeEach(setup, setupTimeoutMs);
   afterEach(cleanup);
 
   it("can add a Role.", () => {
-
     const addRoleBtn = document.getElementById('add-role-btn');
     let roles = document.getElementsByClassName('role');
 
@@ -24,6 +27,12 @@ describe("Role bar controls", () => {
     fireEvent.click(addRoleBtn);
     expect(roles.length).toBe(initialRoleCount + 1);
   });
+
+  it.skip("can edit a Role's text", () => {
+    const firstRoleInput = document.querySelector('.role input');
+    
+
+  })
 
 
   it("Add and Remove rocks correctly.", () => {

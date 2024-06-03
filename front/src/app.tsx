@@ -5,13 +5,8 @@ import RoleBar from './RoleBar';
 import './App.css';
 import rolesReducer from './rolesReducer';
 
-export const initial_state = [
-  { id: 1, roleTitle: 'Role 1', rocks: [{ id: 1, text: 'Rock 1' }, { id: 2, text: 'Rock 2' }] },
-  { id: 2, roleTitle: 'Role 2', rocks: [{ id: 3, text: 'Rock 1' }] },
-];
-
-function App() {
-  const [roles, dispatch] = useReducer(rolesReducer, initial_state);
+function App({ initialRoles }) {
+  const [roles, dispatch] = useReducer(rolesReducer, initialRoles);
 
   return (
     <div className="App">
