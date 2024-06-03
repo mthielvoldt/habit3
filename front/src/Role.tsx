@@ -28,7 +28,7 @@ const Role = ({ role, isEditing, dispatch }) => {
         )}
         {isEditing && (
           <button className="btn btn-danger btn-sm ml-2" onClick={() => dispatch(deleteRoleAction(role.id))}>
-            Delete
+            Delete Role
           </button>
         )}
       </div>

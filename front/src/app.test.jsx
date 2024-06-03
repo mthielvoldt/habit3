@@ -1,8 +1,8 @@
 import React from "react";
-import { render, cleanup, fireEvent, within } from '@testing-library/react';
+import { render, cleanup, screen, fireEvent, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import App, { initial_state } from "./app";
+import App from "./app";
 import { mockRoles } from "../mockData";
 
 describe("Role bar controls", () => {
@@ -35,8 +35,25 @@ describe("Role bar controls", () => {
     expect(firstRoleInput.value.length).toBe(0);
   });
 
+  it("can delete a Role.", () => {
+    let roles = document.getElementsByClassName('role');
+    const firstRoleDeleteBtn = within(roles[0]).getByRole('button', {name: "Delete Role"});
+    const initialRoleCount = roles.length;
 
-  it("Add and Remove rocks correctly.", () => {
+    fireEvent.click(firstRoleDeleteBtn);
+    expect(roles.length).toBe(initialRoleCount - 1);
+  });
+
+  it("can edit a Rock.", {timeout: 100}, async () => {
+    const firstRockInput = document.querySelector('.rock input');
+    const user = userEvent.setup();
+
+    expect(firstRockInput.value.length).toBeGreaterThan(0);
+    user.clear(firstRockInput);
+    expect(firstRockInput.value.length).toBe(0);
+  });
+
+  it("adds and remove Rocks correctly.", () => {
     // Delete the first rock from a role with 2 rocks.
     // There should be 1 rock. 
     // Add a new rock
