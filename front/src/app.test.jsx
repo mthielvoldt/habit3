@@ -5,24 +5,24 @@ import App, { initial_state } from "./app";
 
 describe("Role bar controls", () => {
 
-  const setup_timeout_ms = 200;
+  const setupTimeoutMs = 200;
   function setup() {
     render(<App />);
     // Ensure the initial state
     const editing_btn = document.getElementById('editing-btn');
     fireEvent.click(editing_btn)
   }
-  beforeEach(setup, setup_timeout_ms);
+  beforeEach(setup, setupTimeoutMs);
   afterEach(cleanup);
 
   it("can add a Role.", () => {
 
-    const add_role_btn = document.getElementById('add-role-btn');
+    const addRoleBtn = document.getElementById('add-role-btn');
     let roles = document.getElementsByClassName('role');
 
-    const initial_role_count = roles.length;
-    fireEvent.click(add_role_btn);
-    expect(roles.length).toBe(initial_role_count + 1);
+    const initialRoleCount = roles.length;
+    fireEvent.click(addRoleBtn);
+    expect(roles.length).toBe(initialRoleCount + 1);
   });
 
 
