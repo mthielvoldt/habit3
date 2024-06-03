@@ -32,7 +32,7 @@ const RoleBar = ({ roles, dispatch }) => {
         ))}
         {isEditing && (
           <div className="mt-3">
-            <button className="btn btn-primary btn-sm w-100" onClick={addRole}>Add Role</button>
+            <button id="add-role-btn" className="btn btn-primary btn-sm w-100" onClick={addRole}>Add Role</button>
           </div>
         )}
       </div>
