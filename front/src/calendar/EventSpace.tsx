@@ -1,11 +1,16 @@
 import React, {useState} from "react";
+import Day from "./Day";
 
-
-export default function EventSpace({}) {
+export default function EventSpace({days}) {
 
   return (
     <div id="calendar-events">
-      Calendar events.
+      {days.map(day => (
+        <Day
+          key={day.dayOfWeek}
+          day={day}
+        />
+      ))}
     </div>
   );
 }

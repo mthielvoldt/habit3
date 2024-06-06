@@ -8,26 +8,56 @@
 }
 
 #day-axis{
-  display: block;
+  display: flex;
+  flex-direction: row;
   background-color: aquamarine;
   height: 40px;
   width: calc(100% - 50px);
   position: relative;
-  left: 50px;
+  left: 40px;
+}
+
+.day-label{
+  flex-grow: 1;
+  text-align: center;
 }
 
 #hours-and-events{
   display: flex;
   height: 100%;
   background-color: cornflowerblue;
+  position: relative; /*Makes this the width basis for hour-label::after gridlines*/
 }
 
 #hour-axis{
   background-color: bisque;
-  width: 50px;
+  width: 40px;
+  text-align: center;
+}
+
+.hour-label{
+  /* border-bottom: solid gray 1px; */
+  /* position: relative; */
+}
+
+.hour-label::after{
+  content: "";
+  border-bottom: solid gray 1px;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
 }
 
 #calendar-events{
-  background-color: lightgray;
+  display: flex;
+  flex-direction: row;
+  background-color: rgb(199, 230, 240);
   width: 100%;
+}
+
+.day{
+  flex-grow: 1;
+  border-style: none solid none solid;
+  border-width: 1px;
+  border-color: gray;
 }

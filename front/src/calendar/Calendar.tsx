@@ -4,6 +4,15 @@ import DayAxis from "./DayAxis";
 import HourAxis from "./HourAxis";
 import EventSpace from "./EventSpace";
 
+const days = [
+  {dayOfWeek: "Sunday"},
+  {dayOfWeek: "Monday"},
+  {dayOfWeek: "Tuesday"},
+  {dayOfWeek: "Wednesday"},
+  {dayOfWeek: "Thursday"},
+  {dayOfWeek: "Friday"},
+  {dayOfWeek: "Saturday"}
+]
 
 const initialEvents = [
   {
@@ -18,10 +27,10 @@ export default function Calendar({ }) {
 
   return (
     <div id="calendar">
-      <DayAxis />
+      <DayAxis days={days}/>
       <div id="hours-and-events">
         <HourAxis />
-        <EventSpace />
+        <EventSpace days={days}/>
       </div>
     </div>
   )
