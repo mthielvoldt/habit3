@@ -5,6 +5,7 @@
   position: static;
   background-color: cadetblue;
   width: 100%;
+  --hour-axis-width: 40px;
 }
 
 #day-axis{
@@ -12,14 +13,24 @@
   flex-direction: row;
   background-color: aquamarine;
   height: 40px;
-  width: calc(100% - 50px);
+  width: calc(100% - var(--hour-axis-width));
   position: relative;
-  left: 40px;
+  left: var(--hour-axis-width);
 }
 
 .day-label{
+  position: relative;
   flex-grow: 1;
   text-align: center;
+  border-style: none solid none solid;
+  border-width: 1px;
+}
+
+.day-label h4{
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
 }
 
 #hours-and-events{
@@ -31,7 +42,7 @@
 
 #hour-axis{
   background-color: bisque;
-  width: 40px;
+  min-width: var(--hour-axis-width);
   text-align: center;
 }
 

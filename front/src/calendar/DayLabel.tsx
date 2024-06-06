@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 
-export default function DayLabel({day}) {
+export default function DayLabel({ day }) {
 
   return (
     <div className="day-label">
