@@ -42,6 +42,9 @@
 .rock p {
   flex-grow: 1;
   margin: 0;
+  cursor: move;
+  padding: 8px;
+  border: 1px solid #ccc;
 }
 
 .rock button {

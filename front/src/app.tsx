@@ -5,6 +5,8 @@ import RoleBar from './RoleBar';
 import './App.css';
 import rolesReducer from './rolesReducer';
 import Calendar from './calendar/Calendar';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function App({ initialRoles }) {
   const [roles, dispatch] = useReducer(rolesReducer, initialRoles);
@@ -13,11 +15,13 @@ function App({ initialRoles }) {
     <>
       <Header />
       <main id="main-content">
-        <RoleBar
-          roles={roles}
-          dispatch={dispatch}
-        />
-        <Calendar />
+        <DndProvider backend={HTML5Backend}>
+          <RoleBar
+            roles={roles}
+            dispatch={dispatch}
+          />
+          <Calendar />
+        </DndProvider>
       </main>
       <footer className="footer bg-light py-3 mt-auto">
         <div className="container">
