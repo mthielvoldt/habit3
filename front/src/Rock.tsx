@@ -4,10 +4,10 @@ import './App.css';
 
 const Rock = ({ rock, isEditing, updateRockText, deleteRock }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: 'event',
+    type: 'rock',
     item: rock,
     collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
+      isDragging: monitor.isDragging(),
     }),
   }));
 
