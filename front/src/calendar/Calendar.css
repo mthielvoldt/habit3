@@ -1,0 +1,33 @@
+
+#calendar{
+  display: flex;
+  flex-direction: column;
+  position: static;
+  background-color: cadetblue;
+  width: 100%;
+}
+
+#day-axis{
+  display: block;
+  background-color: aquamarine;
+  height: 40px;
+  width: calc(100% - 50px);
+  position: relative;
+  left: 50px;
+}
+
+#hours-and-events{
+  display: flex;
+  height: 100%;
+  background-color: cornflowerblue;
+}
+
+#hour-axis{
+  background-color: bisque;
+  width: 50px;
+}
+
+#calendar-events{
+  background-color: lightgray;
+  width: 100%;
+}
