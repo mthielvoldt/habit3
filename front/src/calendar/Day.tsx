@@ -3,7 +3,6 @@ import { useDrop } from "react-dnd";
 
 export default function Day({ day }) {
   const [shadowYOffset, setShadowYOffset] = useState(0);
-  // const [shadowIsVisible, setShadowIsVisible] = useState(false);
   const [{ isOver }, drop] = useDrop(() => ({
     // The type (or types) to accept - strings or symbols
     accept: 'rock',
@@ -16,7 +15,6 @@ export default function Day({ day }) {
   }))
 
   function handleDrop(item, monitor) {
-    // setShadowIsVisible(false);
     console.log({
       yValue: shadowYOffset,
       day: day.dayOfWeek,
@@ -26,9 +24,6 @@ export default function Day({ day }) {
 
   function handleDragOver(event) {
     const yOffset = event.target.getBoundingClientRect().top;
-    // if (!shadowIsVisible) {
-    //   setShadowIsVisible(true);
-    // }
     setShadowYOffset(event.clientY - yOffset);
   }
 
@@ -37,7 +32,6 @@ export default function Day({ day }) {
       className="day"
       ref={drop}
       onDragOverCapture={handleDragOver}
-      // onDragLeave={()=> setShadowIsVisible(false)}
     >
       <div className="shadow-event"
         style={{ top: shadowYOffset.toString() + 'px', visibility: isOver ? 'visible' : 'hidden' }}
