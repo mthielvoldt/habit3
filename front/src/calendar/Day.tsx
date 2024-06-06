@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useDrop } from "react-dnd";
 
-export default function Day({day}) {
-  const [yValue, setYValue] = useState(12);
+export default function Day({ day }) {
+  const [shadowYOffset, setShadowYOffset] = useState(0);
+  // const [shadowIsVisible, setShadowIsVisible] = useState(false);
   const [{ isOver }, drop] = useDrop(() => ({
     // The type (or types) to accept - strings or symbols
     accept: 'rock',
@@ -15,27 +16,32 @@ export default function Day({day}) {
   }))
 
   function handleDrop(item, monitor) {
-    console.log(yValue);
-    console.log(day.dayOfWeek)
-    console.log(item);
-    console.log(monitor);
+    // setShadowIsVisible(false);
+    console.log({
+      yValue: shadowYOffset,
+      day: day.dayOfWeek,
+      name: item.text,
+    });
   }
 
-  function handleMouseOver(event) {
-    if (event.clientY !== 0) {
-      setYValue(event.clientY);
-    }
+  function handleDragOver(event) {
+    const yOffset = event.target.getBoundingClientRect().top;
+    // if (!shadowIsVisible) {
+    //   setShadowIsVisible(true);
+    // }
+    setShadowYOffset(event.clientY - yOffset);
   }
 
   return (
     <div
       className="day"
       ref={drop}
-      onDragOverCapture={handleMouseOver}
+      onDragOverCapture={handleDragOver}
+      // onDragLeave={()=> setShadowIsVisible(false)}
     >
       <div className="shadow-event"
-        style={{top: yValue.toString()+'px', visibility: isOver ? 'visible' : 'hidden'}}>
-      </div>
+        style={{ top: shadowYOffset.toString() + 'px', visibility: isOver ? 'visible' : 'hidden' }}
+      />
     </div>
   );
 }

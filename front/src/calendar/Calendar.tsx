@@ -5,13 +5,13 @@ import HourAxis from "./HourAxis";
 import EventSpace from "./EventSpace";
 
 const days = [
-  {dayOfWeek: "Sunday"},
-  {dayOfWeek: "Monday"},
-  {dayOfWeek: "Tuesday"},
-  {dayOfWeek: "Wednesday"},
-  {dayOfWeek: "Thursday"},
-  {dayOfWeek: "Friday"},
-  {dayOfWeek: "Saturday"}
+  {dayOfWeek: "Su"},
+  {dayOfWeek: "Mo"},
+  {dayOfWeek: "Tu"},
+  {dayOfWeek: "We"},
+  {dayOfWeek: "Th"},
+  {dayOfWeek: "Fr"},
+  {dayOfWeek: "Sa"}
 ]
 
 const initialEvents = [
