@@ -9,7 +9,7 @@ const Rock = ({ rock, isEditing, updateRockText, deleteRock }) => {
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-  }));
+  }), [rock]);
 
   const handleChange = (e) => {
     updateRockText(rock.id, e.target.value);
