@@ -7,10 +7,10 @@ export const mockRoles = [
 
 const baseTime = getWeekStart(new Date());
 export const mockAppts: Appt[] = [
-  new Appt("0", {days: -1}, baseTime),
-  new Appt("1", {minutes: 1}, baseTime),
-  new Appt("2", {hours: 9}, baseTime),
-  new Appt("3", {days: 3, hours: 12}, baseTime), 
-  new Appt("4", {days: 9}, baseTime),
-  new Appt("5", {}, baseTime)
+  new Appt("Appointment 0", {days: -1}, baseTime),
+  new Appt("Appointment 1", {minutes: 1}, baseTime),
+  new Appt("Appointment 2", {hours: 9, minutes: 30}, baseTime),
+  new Appt("Appointment 3", {days: 3, hours: 12}, baseTime), 
+  new Appt("Appointment 4", {days: 9}, baseTime),
+  new Appt("Appointment 5", {}, baseTime)
 ]

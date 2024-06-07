@@ -75,6 +75,10 @@
   border-width: 1px;
   border-color: gray;
 }
+.day-inner{
+  display: block;
+  height: 100%;
+}
 
 .shadow-event{
   position: relative;
@@ -82,4 +86,12 @@
   background-color: orange;
   height: 40px;
   top: 50px;
+}
+
+.appointment{
+  position: absolute;
+  background-color: #e8ffda;
+  border-style: solid solid solid solid;
+  border-radius: 6px;
+  text-align: center;
 }
