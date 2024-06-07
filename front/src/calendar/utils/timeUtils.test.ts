@@ -1,24 +1,38 @@
 import { describe, it, test, expect, beforeEach, afterEach, beforeAll } from "vitest";
 import * as tu from "./timeUtils";
-import { mockOAppts } from "../../../mockData";
 
 
 describe("getApptsThisWeek", () => {
 
   it("Excludes only dates before and after this week.", () => {
-    // convert offset appts to normal appts.
-    const appts = mockOAppts.map(oAppt => oAppt.appt);
+    const baseTime = tu.getWeekStart(new Date());
+    const mockAppts: tu.Appt[] = [
+      new tu.Appt("0", { days: -1 }, baseTime),
+      new tu.Appt("1", { minutes: 1 }, baseTime),
+      new tu.Appt("2", { hours: 9 }, baseTime),
+      new tu.Appt("3", { days: 3, hours: 12 }, baseTime),
+      new tu.Appt("4", { days: 9 }, baseTime),
+      new tu.Appt("5", {}, baseTime)
+    ]
 
-    const results = tu.getApptsThisWeek(appts);
-    expect(results.reduce((accum: string, result) => (accum + result.name), "")).toBe("123")
+    const results = tu.getApptsThisWeek(mockAppts);
+    expect(tu.getNamesAsString(results)).toBe("123");
   });
 });
 
-test("offsetsToDateAppts works", async () => {
-  const offsetAppt = new tu.OffsetAppt("Some Name", {});
-  await new Promise(resolve => setTimeout(resolve, 200));
-  const difference_ms = Date.now() - offsetAppt.appt.start.getTime();
-  expect(difference_ms).toBeCloseTo(200, -2)  // allow for 49ms difference.
+test("getApptsToday works", async () => {
+  const baseTime = tu.getPrevMidnight(Date.now());
+  const mockAppts: tu.Appt[] = [
+    new tu.Appt("0", { days: -1 }, baseTime),
+    new tu.Appt("1", { minutes: -1 }, baseTime),
+    new tu.Appt("2", { minutes: 9 }, baseTime),
+    new tu.Appt("3", { hours: 3, minutes: 12 }, baseTime),
+    new tu.Appt("4", { days: 9 }, baseTime),
+    new tu.Appt("5", { }, baseTime)
+  ]
+
+  const results = tu.getApptsToday(mockAppts);
+  expect(tu.getNamesAsString(results)).toBe("23");
 })
 
 // test("toBeCloseTo operation", () => {
