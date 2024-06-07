@@ -3,7 +3,7 @@ import { useDrop } from "react-dnd";
 import * as ts from "./utils/timeUtils";
 import Appointment from "./Appointment";
 
-export default function Day({ dayIndex, appts }) {
+export default function Day({ dayIndex, appts, addAppt }) {
   const [shadowYOffset, setShadowYOffset] = useState(0);
   const [dims, setDims] = useState({ width: 0, height: 0 });
   const ref = useRef(null);
@@ -31,15 +31,14 @@ export default function Day({ dayIndex, appts }) {
   const todaysAppts = ts.getApptsInWindow(allAppts, { start: dayStart, end: dayEnd });
 
   function handleDrop(item, monitor) {
-    console.log({
-      yValue: shadowYOffset,
-      day: dayIndex,
-      name: item.text,
-    });
+    console.log({shadowYOffset, dims})
+    const newAppt = new ts.Appt(item.text, {hours: shadowYOffset / 40}, dayStart);
+    addAppt(newAppt);
   }
 
   function handleDragOver(event) {
     const yOffset = event.target.getBoundingClientRect().top;
+    console.log({yOffset, mousey: event.clientY});
     setShadowYOffset(event.clientY - yOffset);
   }
 
@@ -48,6 +47,7 @@ export default function Day({ dayIndex, appts }) {
       <div className="day-inner"
         ref={drop}
         onDragOverCapture={handleDragOver}
+        
       >
         {todaysAppts.map((appt, index) =>
           <Appointment

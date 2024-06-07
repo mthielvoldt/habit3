@@ -4,10 +4,9 @@ import { Appt } from "./utils/timeUtils";
 export default function Appointment({appt, dayStart, depth, position, dayDimensions}) {
 
   const appointment: Appt = appt;
-  console.log(dayDimensions.height)
 
   let topVal = (appointment.start - dayStart) / (24*3600*1000) * dayDimensions.height;
-  let height = 40;
+  let height = (appointment.durationMinutes / (24*60) * dayDimensions.height );
 
   const top_str = topVal.toString() + 'px';
   const height_str = height.toString() + 'px';

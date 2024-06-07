@@ -9,8 +9,8 @@ const baseTime = getWeekStart(new Date());
 export const mockAppts: Appt[] = [
   new Appt("Appointment 0", {days: -1}, baseTime),
   new Appt("Appointment 1", {minutes: 1}, baseTime),
-  new Appt("Appointment 2", {hours: 9, minutes: 30}, baseTime),
-  new Appt("Appointment 3", {days: 3, hours: 12}, baseTime), 
+  new Appt("Appointment 2", {hours: 7, minutes: 30}, baseTime),
+  new Appt("Appointment 3", {days: 3, hours: 9, duration:120}, baseTime), 
   new Appt("Appointment 4", {days: 9}, baseTime),
   new Appt("Appointment 5", {}, baseTime)
 ]
