@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useDrop } from "react-dnd";
+import * as ts from "./utils/timeUtils";
 
-export default function Day({ day }) {
+export default function Day({ dayIndex, appts }) {
   const [shadowYOffset, setShadowYOffset] = useState(0);
   const [{ isOver }, drop] = useDrop(() => ({
     // The type (or types) to accept - strings or symbols
@@ -14,10 +15,21 @@ export default function Day({ day }) {
     drop: handleDrop
   }))
 
+  const allAppts: ts.Appt[] = appts;
+  // filter for just this day's appointments;
+  const weekStart = ts.getWeekStart(new Date());
+  const dayStart = ts.addDays(weekStart, dayIndex);
+
+  const todaysAppts = ts.getApptsInWindow(
+    allAppts, 
+    {start: dayStart, end: ts.addDays(dayStart, 1)}
+  );
+  const todaysApptNames = ts.getNamesAsString(todaysAppts);
+
   function handleDrop(item, monitor) {
     console.log({
       yValue: shadowYOffset,
-      day: day.dayOfWeek,
+      day: dayIndex,
       name: item.text,
     });
   }
@@ -33,6 +45,7 @@ export default function Day({ day }) {
       ref={drop}
       onDragOverCapture={handleDragOver}
     >
+      {todaysApptNames}
       <div className="shadow-event"
         style={{ top: shadowYOffset.toString() + 'px', visibility: isOver ? 'visible' : 'hidden' }}
       />
