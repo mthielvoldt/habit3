@@ -21,7 +21,7 @@ export default function Day({ dayIndex, appts, addAppt }) {
       canDrop: monitor.canDrop()
     }),
     drop: handleDrop
-  }))
+  }), [shadowYOffset])
 
   const allAppts: ts.Appt[] = appts;
   // filter for just this day's appointments;
@@ -30,8 +30,8 @@ export default function Day({ dayIndex, appts, addAppt }) {
   const dayEnd = ts.addDays(dayStart, 1);
   const todaysAppts = ts.getApptsInWindow(allAppts, { start: dayStart, end: dayEnd });
 
-  function handleDrop(item, monitor) {
-    console.log({shadowYOffset, dims})
+  function handleDrop(item) {
+    console.log({shadowYOffset, dims, item})
     const newAppt = new ts.Appt(item.text, {hours: shadowYOffset / 40}, dayStart);
     addAppt(newAppt);
   }

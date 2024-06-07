@@ -6,8 +6,10 @@ export default function EventSpace({days}) {
   const [appts, setAppts] = useState(mockAppts);
 
   function addAppt(newAppt) {
-    setAppts([...appts, newAppt]);
-    console.log(appts);
+    const newAppts = [...appts, newAppt]
+    
+    console.log(newAppts);
+    setAppts(newAppts);
   }
 
   return (
