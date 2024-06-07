@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import Day from "./Day";
 
-export default function EventSpace({days}) {
+export default function EventSpace({days, appointments}) {
 
   return (
     <div id="calendar-events">

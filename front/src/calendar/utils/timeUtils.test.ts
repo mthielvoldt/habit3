@@ -1,13 +1,13 @@
 import { describe, it, test, expect, beforeEach, afterEach, beforeAll } from "vitest";
 import * as tu from "./timeUtils";
-import { offsetAppts } from "../../../mockData";
+import { mockOAppts } from "../../../mockData";
 
 
 describe("getApptsThisWeek", () => {
 
   it("Excludes only dates before and after this week.", () => {
     // convert offset appts to normal appts.
-    const appts = offsetAppts.map(oAppt => oAppt.appt);
+    const appts = mockOAppts.map(oAppt => oAppt.appt);
 
     const results = tu.getApptsThisWeek(appts);
     expect(results.reduce((accum: string, result) => (accum + result.name), "")).toBe("123")

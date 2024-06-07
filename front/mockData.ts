@@ -6,7 +6,7 @@ export const mockRoles = [
 ];
 
 const baseTime = getWeekStart(new Date()).getTime();
-export const offsetAppts: OffsetAppt[] = [
+export const mockOAppts: OffsetAppt[] = [
   new OffsetAppt("0", {days: -1}, baseTime),
   new OffsetAppt("1", {minutes: 1}, baseTime),
   new OffsetAppt("2", {hours: 9}, baseTime),

@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from 'react-dom/client'
 import App from './app.tsx'
-import { mockRoles } from "../mockData.js";
+import { mockRoles } from "../mockData.ts";
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 

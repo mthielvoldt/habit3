@@ -3,6 +3,7 @@ import './Calendar.css';
 import DayAxis from "./DayAxis";
 import HourAxis from "./HourAxis";
 import EventSpace from "./EventSpace";
+import { mockOAppts } from "../../mockData";
 
 const days = [
   {dayOfWeek: "Su"},
@@ -14,23 +15,15 @@ const days = [
   {dayOfWeek: "Sa"}
 ]
 
-const initialEvents = [
-  {
-    name: "Event 1",
-    start: Date(),
-    minutes: 60
-  }
-]
-
 export default function Calendar({ }) {
-  const [events, setEvents] = useState(initialEvents);
+  const [appointments, setEvents] = useState(mockOAppts);
 
   return (
     <div id="calendar">
       <DayAxis days={days}/>
       <div id="hours-and-events">
         <HourAxis />
-        <EventSpace days={days}/>
+        <EventSpace days={days} appointments={appointments}/>
       </div>
     </div>
   )
