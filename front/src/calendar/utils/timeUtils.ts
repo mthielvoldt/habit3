@@ -56,7 +56,7 @@ export function getWeekStart(date: Date): number {
   return getPrevMidnight(thisTimePrevSunday);
 }
 
-function getThisWeek(): Window {
+export function getThisWeek(): Window {
   const start = getWeekStart( new Date());
   const end = addDays(start, 7);
   return { start, end };

@@ -42,13 +42,15 @@ export function handleSignoutClick() {
  */
 async function listUpcomingEvents() {
   let response;
+  const week = tu.getThisWeek();
   try {
     const request = {
       'calendarId': 'primary',
-      'timeMin': (new Date()).toISOString(),
+      'timeMin': (new Date(week.start)).toISOString(),
+      'timeMax': (new Date(week.end)).toISOString(),
       'showDeleted': false,
       'singleEvents': true,
-      'maxResults': 10,
+      'maxResults': 50,
       'orderBy': 'startTime',
     };
     response = await gapi.client.calendar.events.list(request);
@@ -67,7 +69,7 @@ async function listUpcomingEvents() {
     (str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
     'Events:\n');
 
-  console.log(output);
+  console.log(events);
 }
 
 /**
