@@ -1,7 +1,7 @@
 import React from 'react';
+import {handleAuthClick, handleSignoutClick} from './calendar/GCalActions';
 
 function Header() {
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID; // TODO: Move this to server.
 
   return (
     <header className="navbar navbar-expand-md navbar-light bg-light fixed-top">
@@ -16,6 +16,14 @@ function Header() {
             </li>
           </ul>
           <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <button id="google-connect-btn"
+                className="btn btn-primary"
+                type='button'
+                onClick={handleAuthClick}>
+                Link to Google
+              </button>
+            </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" href="#" id="userWidget" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="avatar_placeholder.png" alt="Avatar" className="rounded-circle" width="30" height="30" />

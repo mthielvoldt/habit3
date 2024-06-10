@@ -92,7 +92,6 @@
 .appointment{
   position: absolute;
   z-index: 1;
-  pointer-events: ;
   background-color: #e8ffda;
   border-style: solid solid solid solid;
   border-radius: 6px;
