@@ -1,20 +1,21 @@
 import React from 'react';
 
 function Header() {
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID; // TODO: Move this to server.
+
   return (
-    <header className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-      <div className="container">
+    <header className="navbar navbar-expand-md navbar-light bg-light fixed-top">
         <a className="navbar-brand" href="#">Weekly Planner</a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav mr-auto">
+          <ul className="navbar-nav">
             <li className="nav-item">
               <a className="nav-link" href="#" id="aboutWidget">About</a>
             </li>
           </ul>
-          <ul className="navbar-nav ml-auto">
+          <ul className="navbar-nav ms-auto">
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" href="#" id="userWidget" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="avatar_placeholder.png" alt="Avatar" className="rounded-circle" width="30" height="30" />
@@ -28,7 +29,6 @@ function Header() {
             </li>
           </ul>
         </div>
-      </div>
     </header>
   );
 };

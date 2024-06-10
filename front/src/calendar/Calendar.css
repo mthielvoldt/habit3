@@ -57,7 +57,7 @@
   pointer-events: none;
   border-bottom: solid gray 1px;
   position: absolute;
-  width: 100%;
+  width: calc(100% - var(--hour-axis-width)/2);
   z-index: 1;
 }
 

@@ -11,6 +11,6 @@ export const mockAppts: Appt[] = [
   new Appt("Appointment 1", {minutes: 1}, baseTime),
   new Appt("Appointment 2", {hours: 7, minutes: 30}, baseTime),
   new Appt("Appointment 3", {days: 3, hours: 9, duration:120}, baseTime), 
-  new Appt("Appointment 4", {days: 6, hours: 2}, baseTime),
+  new Appt("Appointment 4", {days: 5, hours: 2}, baseTime),
   new Appt("Appointment 5", {}, baseTime)
 ]
