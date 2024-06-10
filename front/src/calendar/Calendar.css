@@ -82,6 +82,7 @@
 
 .shadow-event{
   position: relative;
+  z-index: 2;
   pointer-events: none;
   background-color: orange;
   height: 40px;
@@ -90,6 +91,8 @@
 
 .appointment{
   position: absolute;
+  z-index: 1;
+  pointer-events: ;
   background-color: #e8ffda;
   border-style: solid solid solid solid;
   border-radius: 6px;
