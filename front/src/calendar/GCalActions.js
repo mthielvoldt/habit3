@@ -23,32 +23,39 @@ tokenClient = google.accounts.oauth2.initTokenClient({
 });
 
 
-
 /**
  *  Sign in the user upon button click.
  */
-export function handleAuthClick(replaceAppts_cb) {
-  let result 
+export async function handleAuthClick(replaceAppts_cb) {
   console.log("handleAuthClick");
-  tokenClient.callback = async (resp) => {
+  tokenClient.callback = (resp) => {
     if (resp.error !== undefined) {
       throw (resp);
     }
     // document.getElementById('signout_button').style.visibility = 'visible';
     // document.getElementById('authorize_button').innerText = 'Refresh';
-    result = await listUpcomingEvents(replaceAppts_cb);
+    const token = JSON.stringify(gapi.client.getToken());
+    sessionStorage.setItem("gapi.client.token", token);
+    console.log(token);
+    listUpcomingEvents(replaceAppts_cb);
   };
 
-  if (gapi.client.getToken() === null) {
-    // Prompt the user to select a Google Account and ask for consent to share their data
-    // when establishing a new session.
-    tokenClient.requestAccessToken({ prompt: 'consent' });
-  } else {
-    // Skip display of account chooser and consent dialog for an existing session.
-    tokenClient.requestAccessToken({ prompt: '' });
+  const sessionToken = JSON.parse(sessionStorage.getItem("gapi.client.token"));
+  if (sessionToken !== null) {
+    gapi.client.setToken(sessionToken);
   }
 
-  console.log("end");
+  try {
+    await listUpcomingEvents(replaceAppts_cb);
+  } catch {
+    try {
+      console.log("Requesting new access token.");
+      tokenClient.requestAccessToken({ prompt: '' });
+    } catch {
+      console.log("Retrying Token request with consent screen.");
+      tokenClient.requestAccessToken({ prompt: 'consent' });
+    }
+  }
 }
 
 /**
@@ -73,29 +80,22 @@ export function handleSignoutClick() {
 async function listUpcomingEvents(replaceAppts_cb) {
   let response;
   const week = tu.getThisWeek();
-  try {
-    const request = {
-      'calendarId': 'primary',
-      'timeMin': (new Date(week.start)).toISOString(),
-      'timeMax': (new Date(week.end)).toISOString(),
-      'showDeleted': false,
-      'singleEvents': true,
-      'maxResults': 50,
-      'orderBy': 'startTime',
-    };
-    response = await gapi.client.calendar.events.list(request);
-  } catch (err) {
-    // document.getElementById('content').innerText = err.message;
-    return;
-  }
 
-  
+  const request = {
+    'calendarId': 'primary',
+    'timeMin': (new Date(week.start)).toISOString(),
+    'timeMax': (new Date(week.end)).toISOString(),
+    'showDeleted': false,
+    'singleEvents': true,
+    'maxResults': 50,
+    'orderBy': 'startTime',
+  };
+  response = await gapi.client.calendar.events.list(request);
+
   if (!response.result.items || response.result.items.length == 0) {
-    // document.getElementById('content').innerText = 'No events found.';
+    // Pop up a message that this account doesn't have any events.
     return;
   }
-
-  // {summary, start.dateTime, end.dateTime}
   replaceAppts_cb(response.result.items);
 }
 
