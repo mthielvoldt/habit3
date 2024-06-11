@@ -1,7 +1,6 @@
 import React from 'react';
-import {handleAuthClick, handleSignoutClick} from './calendar/GCalActions';
 
-function Header() {
+function Header({syncCalendar}) {
 
   return (
     <header className="navbar navbar-expand-md navbar-light bg-light fixed-top">
@@ -20,7 +19,7 @@ function Header() {
               <button id="google-connect-btn"
                 className="btn btn-primary"
                 type='button'
-                onClick={handleAuthClick}>
+                onClick={syncCalendar}>
                 Link to Google
               </button>
             </li>

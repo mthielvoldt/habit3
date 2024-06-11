@@ -1,16 +1,8 @@
 import React, {useState} from "react";
 import Day from "./Day";
-import { mockAppts } from "../../mockData";
 
-export default function EventSpace({days}) {
-  const [appts, setAppts] = useState(mockAppts);
-
-  function addAppt(newAppt) {
-    const newAppts = [...appts, newAppt]
-    
-    console.log(newAppts);
-    setAppts(newAppts);
-  }
+export default function EventSpace({days, appts, addAppt}) {
+  
 
   return (
     <div id="calendar-events">

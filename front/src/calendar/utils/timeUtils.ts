@@ -16,16 +16,16 @@ OffsetAppt presents an appointment in a way that reframes it as relative to a ba
 This is a convenient display since our appointments all appear relative to the week start.
 */
 export class Appt {
-  name: string;
+  summary: string;
   start: number;  // time
   durationMinutes: number;
 
   constructor(
-      name: string,
-      {days = 0, hours = 0, minutes = 0, duration = 60 }, 
-      baseTime: number = Date.now()) {
-    this.name = name,
-    this.start = offsetTime({ days, hours, minutes }, baseTime);
+    summary: string = "",
+    { days = 0, hours = 0, minutes = 0, duration = 60 },
+    baseTime: number = Date.now()) {
+    this.summary = summary,
+      this.start = offsetTime({ days, hours, minutes }, baseTime);
     this.durationMinutes = duration;
   };
 
@@ -34,6 +34,13 @@ export class Appt {
     return (this.start > window.start) && (this.start < window.end);
   }
 };
+
+export function apptFromGEvent(gEvent): Appt {
+  const result = new Appt(gEvent.summary, {});
+  result.start = new Date(gEvent.start.dateTime).getTime();
+  result.durationMinutes = (new Date(gEvent.end.dateTime).getTime() - result.start) / 60000;
+  return result;
+}
 
 export function getPrevMidnight(time: number): number {
   const result = new Date(time)
@@ -57,7 +64,7 @@ export function getWeekStart(date: Date): number {
 }
 
 export function getThisWeek(): Window {
-  const start = getWeekStart( new Date());
+  const start = getWeekStart(new Date());
   const end = addDays(start, 7);
   return { start, end };
 }
@@ -74,8 +81,8 @@ export function getApptsToday(appts: Appt[]) {
   return getApptsInWindow(appts, getToday());
 }
 
-export function getNamesAsString(appts: Appt[]) {
-  return appts.reduce((accum: string, result) => (accum + result.name), "");
+export function getSummariesAsString(appts: Appt[]) {
+  return appts.reduce((accum: string, result) => (accum + result.summary), "");
 }
 
 function offsetTime(offset: Offset, baseTime: number): number {

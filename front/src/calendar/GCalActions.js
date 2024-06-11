@@ -12,13 +12,43 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
 
 let tokenClient;
+let events;
+
+gapi.load('client', initializeGapiClient);
+
+tokenClient = google.accounts.oauth2.initTokenClient({
+  client_id: CLIENT_ID,
+  scope: SCOPES,
+  callback: '', // defined later
+});
+
+
 
 /**
  *  Sign in the user upon button click.
  */
-export async function handleAuthClick() {
+export function handleAuthClick(replaceAppts_cb) {
+  let result 
   console.log("handleAuthClick");
-  gapi.load('client', initializeGapiClient);
+  tokenClient.callback = async (resp) => {
+    if (resp.error !== undefined) {
+      throw (resp);
+    }
+    // document.getElementById('signout_button').style.visibility = 'visible';
+    // document.getElementById('authorize_button').innerText = 'Refresh';
+    result = await listUpcomingEvents(replaceAppts_cb);
+  };
+
+  if (gapi.client.getToken() === null) {
+    // Prompt the user to select a Google Account and ask for consent to share their data
+    // when establishing a new session.
+    tokenClient.requestAccessToken({ prompt: 'consent' });
+  } else {
+    // Skip display of account chooser and consent dialog for an existing session.
+    tokenClient.requestAccessToken({ prompt: '' });
+  }
+
+  console.log("end");
 }
 
 /**
@@ -40,7 +70,7 @@ export function handleSignoutClick() {
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
-async function listUpcomingEvents() {
+async function listUpcomingEvents(replaceAppts_cb) {
   let response;
   const week = tu.getThisWeek();
   try {
@@ -59,17 +89,14 @@ async function listUpcomingEvents() {
     return;
   }
 
-  const events = response.result.items;
-  if (!events || events.length == 0) {
+  
+  if (!response.result.items || response.result.items.length == 0) {
     // document.getElementById('content').innerText = 'No events found.';
     return;
   }
-  // Flatten to string to display
-  const output = events.reduce(
-    (str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
-    'Events:\n');
 
-  console.log(events);
+  // {summary, start.dateTime, end.dateTime}
+  replaceAppts_cb(response.result.items);
 }
 
 /**
@@ -77,34 +104,9 @@ async function listUpcomingEvents() {
  * discovery doc to initialize the API.
  */
 async function initializeGapiClient() {
-  console.log(gapi.client);
 
   await gapi.client.init({
     apiKey: API_KEY,
     discoveryDocs: [DISCOVERY_DOC],
   });
-
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: SCOPES,
-    callback: '', // defined later
-  });
-
-  tokenClient.callback = async (resp) => {
-    if (resp.error !== undefined) {
-      throw (resp);
-    }
-    // document.getElementById('signout_button').style.visibility = 'visible';
-    // document.getElementById('authorize_button').innerText = 'Refresh';
-    await listUpcomingEvents();
-  };
-
-  if (gapi.client.getToken() === null) {
-    // Prompt the user to select a Google Account and ask for consent to share their data
-    // when establishing a new session.
-    tokenClient.requestAccessToken({ prompt: 'consent' });
-  } else {
-    // Skip display of account chooser and consent dialog for an existing session.
-    tokenClient.requestAccessToken({ prompt: '' });
-  }
 }

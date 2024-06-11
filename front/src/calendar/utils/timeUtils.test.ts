@@ -16,7 +16,7 @@ describe("getApptsThisWeek", () => {
     ]
 
     const results = tu.getApptsThisWeek(mockAppts);
-    expect(tu.getNamesAsString(results)).toBe("123");
+    expect(tu.getSummariesAsString(results)).toBe("123");
   });
 });
 
@@ -32,7 +32,7 @@ test("getApptsToday works", async () => {
   ]
 
   const results = tu.getApptsToday(mockAppts);
-  expect(tu.getNamesAsString(results)).toBe("23");
+  expect(tu.getSummariesAsString(results)).toBe("23");
 })
 
 // test("toBeCloseTo operation", () => {

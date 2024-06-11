@@ -16,7 +16,7 @@ export default function Appointment({appt, dayStart, depth, position, dayDimensi
     <div className="appointment"
       style={{top: top_str, height: height_str, width: width_str}}
     >
-      {appt.name}
+      {appt.summary}
     </div>
   )
 }
