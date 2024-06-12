@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Header({signOut}) {
+function Header({signOut, user}) {
 
   return (
     <header className="navbar navbar-expand-md navbar-light bg-light fixed-top">
@@ -24,8 +24,8 @@ function Header({signOut}) {
               </button>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" id="userWidget" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="avatar_placeholder.png" alt="Avatar" className="rounded-circle" width="30" height="30" />
+              <a className="nav-link dropdown-toggle" href="#" id="user-widget" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src={user.avatar} alt="Avatar" className="rounded-circle" width="40" height="40" />
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="userWidget">
                 <a className="dropdown-item" href="#">Profile</a>

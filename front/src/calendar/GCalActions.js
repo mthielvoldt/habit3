@@ -5,11 +5,12 @@ const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
 // Discovery doc URL for APIs used by the quickstart
-const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
+const CALENDAR_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
+const PEOPLE_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/people/v1/rest';
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-const SCOPES = 'https://www.googleapis.com/auth/calendar';
+const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.profile';
 
 let tokenClient = google.accounts.oauth2.initTokenClient({
   client_id: CLIENT_ID,
@@ -24,7 +25,7 @@ gapi.load('client', initializeGapiClient);
  *  Sign in the user upon button click.
  */
 export async function fetchEvents() {
-  let events;
+  let events, user;
   console.log("fetchEvents");
   retreiveToken();
 
@@ -46,13 +47,18 @@ export async function fetchEvents() {
         tokenClient.requestAccessToken({ prompt: '' });
       });
       events = await tokenPromise;
-      
     } catch {
       // TODO: this doesn't work. 
       console.error("Could not get new access token");
     }
   }
-  return events;
+  try {
+    user = await getUser();
+  } catch (error) {
+    console.error(error);
+  }
+
+  return { events, user };
 }
 
 /**
@@ -96,6 +102,20 @@ async function listWeeksEvents() {
   return response.result.items;
 }
 
+async function getUser() {
+  console.log("getAvatar()");
+  let response = await gapi.client.people.people.get({
+    'resourceName': 'people/me',
+    'personFields': 'names,photos'
+  });
+  console.log("getAvatar result", response.result);
+
+  return {
+    avatar: response.result.photos[0].url,
+    name: response.result.names[0].displayName
+  };
+}
+
 export async function addEvent(appt) {
   const event = {
     'summary': appt.summary,
@@ -129,7 +149,7 @@ async function initializeGapiClient() {
 
   await gapi.client.init({
     apiKey: API_KEY,
-    discoveryDocs: [DISCOVERY_DOC],
+    discoveryDocs: [CALENDAR_DISCOVERY_DOC, PEOPLE_DISCOVERY_DOC],
   });
   isReady = true;
 }

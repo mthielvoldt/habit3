@@ -13,7 +13,8 @@ import * as tu from "./calendar/utils/timeUtils"
 function App({ initialRoles }) {
   const [roles, dispatch] = useReducer(rolesReducer, initialRoles);
   const [appts, setAppts] = useState([]);
-  useEffect(syncCalendar, []);
+  const [user, setUser] = useState({name: "", avatar: ""});
+  useEffect(syncGoogle, []);
 
   function addAppt(newAppt) {
     const newAppts = [...appts, newAppt]
@@ -21,16 +22,18 @@ function App({ initialRoles }) {
     setAppts(newAppts);
   }
 
-  function syncCalendar() {
+  function syncGoogle() {
     let ignore = false;
 
-    function fetchWhenReady() {
+    async function fetchWhenReady() {
       if (ignore) {
         console.log("This sync call ignored, aborting fetch attempts.");
       } else if (gcal.isClientReady()) {
-        const gEventsPromise = gcal.fetchEvents(); // a promise
+        const {events, user} = await gcal.fetchEvents(); // a promise
         // TODO: handle ignore if it comes after fetch request is sent.
-        replaceAppts(gEventsPromise);
+        replaceAppts(events);
+        console.log("user:", user);
+        setUser(user);
       } else {
         console.log("Schedule fetch retry for later.");
         setTimeout(fetchWhenReady, 500);
@@ -43,17 +46,16 @@ function App({ initialRoles }) {
     }
   }
 
-  async function replaceAppts(gEventsPromise) {
-    const gEvents = await gEventsPromise;
-    console.log("gEvents\n", gEvents);
-    const newAppts = gEvents.map(tu.apptFromGEvent);
+  function replaceAppts(events) {
+    console.log("gEvents\n", events);
+    const newAppts = events.map(tu.apptFromGEvent);
     setAppts(newAppts);
   }
 
 
   return (
     <>
-      <Header signOut={gcal.handleSignoutClick} />
+      <Header signOut={gcal.handleSignoutClick} user={user}/>
       <main id="main-content">
         <DndProvider backend={HTML5Backend}>
           <RoleBar
