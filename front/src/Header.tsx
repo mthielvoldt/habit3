@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Header({syncCalendar}) {
+function Header({signOut}) {
 
   return (
     <header className="navbar navbar-expand-md navbar-light bg-light fixed-top">
@@ -17,10 +17,10 @@ function Header({syncCalendar}) {
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <button id="google-connect-btn"
-                className="btn btn-primary"
+                className="btn btn-secondary"
                 type='button'
-                onClick={syncCalendar}>
-                Link to Google
+                onClick={signOut}>
+                Sign Out
               </button>
             </li>
             <li className="nav-item dropdown">

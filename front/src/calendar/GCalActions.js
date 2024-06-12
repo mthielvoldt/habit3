@@ -33,20 +33,23 @@ export async function fetchEvents() {
   } catch {
     try {
       console.log("Requesting new access token.");
-      tokenClient.callback = async (resp) => {
-        if (resp.error !== undefined) {
-          throw (resp);
-        }
-        // document.getElementById('signout_button').style.visibility = 'visible';
-        // document.getElementById('authorize_button').innerText = 'Refresh';
-        storeToken();
-        events = await listWeeksEvents();
-      };
-      tokenClient.requestAccessToken({ prompt: '' });
+      const tokenPromise = new Promise((resolve, reject) => {
+        tokenClient.callback = (resp) => {
+          if (resp.error !== undefined) {
+            throw (resp);
+          }
+          // document.getElementById('signout_button').style.visibility = 'visible';
+          // document.getElementById('authorize_button').innerText = 'Refresh';
+          storeToken();
+          resolve(listWeeksEvents());
+        };
+        tokenClient.requestAccessToken({ prompt: '' });
+      });
+      events = await tokenPromise;
+      
     } catch {
       // TODO: this doesn't work. 
-      console.log("Retrying Token request with consent screen.");
-      tokenClient.requestAccessToken({ prompt: 'consent' });
+      console.error("Could not get new access token");
     }
   }
   return events;

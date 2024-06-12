@@ -53,7 +53,7 @@ function App({ initialRoles }) {
 
   return (
     <>
-      <Header syncCalendar={syncCalendar} />
+      <Header signOut={gcal.handleSignoutClick} />
       <main id="main-content">
         <DndProvider backend={HTML5Backend}>
           <RoleBar
