@@ -11,51 +11,43 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 // included, separated by spaces.
 const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
 
-let tokenClient;
-let events;
-
-gapi.load('client', initializeGapiClient);
-
-tokenClient = google.accounts.oauth2.initTokenClient({
+let tokenClient = google.accounts.oauth2.initTokenClient({
   client_id: CLIENT_ID,
   scope: SCOPES,
   callback: '', // defined later
 });
 
+gapi.load('client', initializeGapiClient);
 
 /**
  *  Sign in the user upon button click.
  */
-export async function handleAuthClick(replaceAppts_cb) {
-  console.log("handleAuthClick");
-  tokenClient.callback = (resp) => {
-    if (resp.error !== undefined) {
-      throw (resp);
-    }
-    // document.getElementById('signout_button').style.visibility = 'visible';
-    // document.getElementById('authorize_button').innerText = 'Refresh';
-    const token = JSON.stringify(gapi.client.getToken());
-    sessionStorage.setItem("gapi.client.token", token);
-    console.log(token);
-    listUpcomingEvents(replaceAppts_cb);
-  };
-
-  const sessionToken = JSON.parse(sessionStorage.getItem("gapi.client.token"));
-  if (sessionToken !== null) {
-    gapi.client.setToken(sessionToken);
-  }
-
+export async function fetchEvents() {
+  let events;
+  console.log("fetchEvents");
+  retreiveToken();
+  
   try {
-    await listUpcomingEvents(replaceAppts_cb);
+    events = await listUpcomingEvents();
   } catch {
     try {
       console.log("Requesting new access token.");
+      tokenClient.callback = async (resp) => {
+        if (resp.error !== undefined) {
+          throw (resp);
+        }
+        // document.getElementById('signout_button').style.visibility = 'visible';
+        // document.getElementById('authorize_button').innerText = 'Refresh';
+        storeToken();
+        events = await listUpcomingEvents();
+      };
       tokenClient.requestAccessToken({ prompt: '' });
     } catch {
       console.log("Retrying Token request with consent screen.");
       tokenClient.requestAccessToken({ prompt: 'consent' });
     }
   }
+  return events;
 }
 
 /**
@@ -77,7 +69,7 @@ export function handleSignoutClick() {
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
-async function listUpcomingEvents(replaceAppts_cb) {
+async function listUpcomingEvents() {
   let response;
   const week = tu.getThisWeek();
 
@@ -94,9 +86,8 @@ async function listUpcomingEvents(replaceAppts_cb) {
 
   if (!response.result.items || response.result.items.length == 0) {
     // Pop up a message that this account doesn't have any events.
-    return;
   }
-  replaceAppts_cb(response.result.items);
+  return response.result.items;
 }
 
 /**
@@ -109,4 +100,17 @@ async function initializeGapiClient() {
     apiKey: API_KEY,
     discoveryDocs: [DISCOVERY_DOC],
   });
+  window.gapiClientInitialized = true;
+}
+
+function storeToken() {
+  const token = JSON.stringify(gapi.client.getToken());
+  sessionStorage.setItem("gapi.client.token", token);
+}
+
+function retreiveToken() {
+  const sessionToken = JSON.parse(sessionStorage.getItem("gapi.client.token"));
+  if (sessionToken !== null) {
+    gapi.client.setToken(sessionToken);
+  }
 }
