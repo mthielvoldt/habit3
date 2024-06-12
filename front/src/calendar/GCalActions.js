@@ -9,13 +9,14 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
+const SCOPES = 'https://www.googleapis.com/auth/calendar';
 
 let tokenClient = google.accounts.oauth2.initTokenClient({
   client_id: CLIENT_ID,
   scope: SCOPES,
   callback: '', // defined later
 });
+let isReady = false;
 
 gapi.load('client', initializeGapiClient);
 
@@ -26,9 +27,9 @@ export async function fetchEvents() {
   let events;
   console.log("fetchEvents");
   retreiveToken();
-  
+
   try {
-    events = await listUpcomingEvents();
+    events = await listWeeksEvents();
   } catch {
     try {
       console.log("Requesting new access token.");
@@ -39,10 +40,11 @@ export async function fetchEvents() {
         // document.getElementById('signout_button').style.visibility = 'visible';
         // document.getElementById('authorize_button').innerText = 'Refresh';
         storeToken();
-        events = await listUpcomingEvents();
+        events = await listWeeksEvents();
       };
       tokenClient.requestAccessToken({ prompt: '' });
     } catch {
+      // TODO: this doesn't work. 
       console.log("Retrying Token request with consent screen.");
       tokenClient.requestAccessToken({ prompt: 'consent' });
     }
@@ -69,7 +71,8 @@ export function handleSignoutClick() {
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
-async function listUpcomingEvents() {
+async function listWeeksEvents() {
+  console.log("listWeeksEvents");
   let response;
   const week = tu.getThisWeek();
 
@@ -90,6 +93,31 @@ async function listUpcomingEvents() {
   return response.result.items;
 }
 
+export async function addEvent(appt) {
+  const event = {
+    'summary': appt.summary,
+    'start': {
+      'dateTime': appt.startDateISO,
+      'timeZone': 'America/New_York'
+    },
+    'end': {
+      'dateTime': appt.endDateISO,
+      'timeZone': 'America/New_York'
+    },
+  };
+
+  const request = {
+    'calendarId': 'primary',
+    'resource': event
+  }
+  console.log("request", request);
+  let res = await gapi.client.calendar.events.insert(request)
+
+  console.log("response", res);
+}
+
+export function isClientReady() { return isReady; }
+
 /**
  * Callback after the API client is loaded. Loads the
  * discovery doc to initialize the API.
@@ -100,7 +128,7 @@ async function initializeGapiClient() {
     apiKey: API_KEY,
     discoveryDocs: [DISCOVERY_DOC],
   });
-  window.gapiClientInitialized = true;
+  isReady = true;
 }
 
 function storeToken() {

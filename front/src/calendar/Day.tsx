@@ -38,7 +38,7 @@ export default function Day({ dayIndex, appts, addAppt }) {
 
   function handleDragOver(event) {
     const yOffset = document.getElementById('calendar-events').getBoundingClientRect().top;
-    console.log({yOffset, mousey: event.clientY});
+    // console.log({yOffset, mousey: event.clientY});
     setShadowYOffset(event.clientY - yOffset);
   }
 

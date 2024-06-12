@@ -33,6 +33,12 @@ export class Appt {
     const window = getThisWeek();
     return (this.start > window.start) && (this.start < window.end);
   }
+  get startDateISO(): string {
+    return (new Date(this.start)).toISOString();
+  }
+  get endDateISO(): string {
+    return (new Date(this.start + (60 * 1000 * this.durationMinutes)).toISOString());
+  }
 };
 
 export function apptFromGEvent(gEvent): Appt {

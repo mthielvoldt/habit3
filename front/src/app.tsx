@@ -7,7 +7,7 @@ import rolesReducer from './rolesReducer';
 import Calendar from './calendar/Calendar';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { fetchEvents, handleSignoutClick } from './calendar/GCalActions';
+import * as gcal from './calendar/GCalActions';
 import * as tu from "./calendar/utils/timeUtils"
 
 function App({ initialRoles }) {
@@ -17,29 +17,28 @@ function App({ initialRoles }) {
 
   function addAppt(newAppt) {
     const newAppts = [...appts, newAppt]
-
-    console.log(newAppts);
+    gcal.addEvent(newAppt);
     setAppts(newAppts);
   }
 
   function syncCalendar() {
     let ignore = false;
-    console.log("syncCalendar");
 
     function fetchWhenReady() {
       if (ignore) {
-        console.log("Fetch ignored, aborting.");
-      } else if (typeof window.gapiClientInitialized !== "undefined") {
-        const gEventsPromise = fetchEvents(); // a promise
+        console.log("This sync call ignored, aborting fetch attempts.");
+      } else if (gcal.isClientReady()) {
+        const gEventsPromise = gcal.fetchEvents(); // a promise
+        // TODO: handle ignore if it comes after fetch request is sent.
         replaceAppts(gEventsPromise);
       } else {
-        console.log("retrying later");
+        console.log("Schedule fetch retry for later.");
         setTimeout(fetchWhenReady, 500);
       }
     }
     fetchWhenReady();
     return () => {
-      console.log('Ignoring this sync');
+      console.log('Ignoring this call to sync.');
       ignore = true;
     }
   }
