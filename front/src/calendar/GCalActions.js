@@ -25,7 +25,7 @@ gapi.load('client', initializeGapiClient);
  *  Sign in the user upon button click.
  */
 export async function fetchEvents() {
-  let events, user;
+  let events = [], user = {name: "", avatar: ""};
   console.log("fetchEvents");
   retreiveToken();
 
@@ -69,9 +69,7 @@ export function handleSignoutClick() {
   if (token !== null) {
     google.accounts.oauth2.revoke(token.access_token);
     gapi.client.setToken('');
-    // document.getElementById('content').innerText = '';
-    // document.getElementById('authorize_button').innerText = 'Authorize';
-    // document.getElementById('signout_button').style.visibility = 'hidden';
+    storeToken(); // This clears the previously stored token. 
   }
 }
 

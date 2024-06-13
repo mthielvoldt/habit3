@@ -10,16 +10,18 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as gcal from './calendar/GCalActions';
 import * as tu from "./calendar/utils/timeUtils"
 
+const noUser = {name: "", avatar: ""};
+const noAppts: tu.Appt[] = [];
+
 function App({ initialRoles }) {
   const [roles, dispatch] = useReducer(rolesReducer, initialRoles);
-  const [appts, setAppts] = useState([]);
-  const [user, setUser] = useState({name: "", avatar: ""});
+  const [appts, setAppts] = useState(noAppts);
+  const [user, setUser] = useState(noUser);
   useEffect(syncGoogle, []);
 
-  function addAppt(newAppt) {
-    const newAppts = [...appts, newAppt]
+  function addAppt(newAppt: tu.Appt) {
     gcal.addEvent(newAppt);
-    setAppts(newAppts);
+    setAppts([...appts, newAppt]);
   }
 
   function syncGoogle() {
@@ -52,10 +54,18 @@ function App({ initialRoles }) {
     setAppts(newAppts);
   }
 
+  function signOut() {
+    gcal.handleSignoutClick();
+    setAppts(noAppts);
+    setUser(noUser);
+    // setTimeout(syncGoogle, 1000);
+    syncGoogle();
+  }
+
 
   return (
     <>
-      <Header signOut={gcal.handleSignoutClick} user={user}/>
+      <Header signOut={signOut} user={user}/>
       <main id="main-content">
         <DndProvider backend={HTML5Backend}>
           <RoleBar
