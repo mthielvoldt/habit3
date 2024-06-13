@@ -25,7 +25,7 @@ gapi.load('client', initializeGapiClient);
  *  Sign in the user upon button click.
  */
 export async function fetchEvents() {
-  let events = [], user = {name: "", avatar: ""};
+  let events = [], user = { name: "", avatar: "" }, rolesEvent = [];
   console.log("fetchEvents");
   retreiveToken();
 
@@ -55,10 +55,14 @@ export async function fetchEvents() {
   try {
     user = await getUser();
   } catch (error) {
-    console.error(error);
+    console.error("getUser", error);
   }
-
-  return { events, user };
+  try {
+    rolesEvent = await getRoles();
+  } catch (error) {
+    console.error("getRoles", error);
+  }
+  return { events, user, rolesEvent };
 }
 
 /**
@@ -100,6 +104,34 @@ async function listWeeksEvents() {
   return response.result.items;
 }
 
+async function getRoles() {
+  let res
+  res = await gapi.client.calendar.events.list({
+    'calendarId': 'primary',
+    'timeMin': '2024-06-13T00:00:00.000Z',
+    'timeMax': '2024-06-14T00:00:00.000Z',
+    'q': "habit3-roles-1",
+    'showDeleted': false,
+    'maxResults': 1,
+  });
+  // console.log("getRoles res1", res);
+  if (res.result.items.length !== 0) {
+    return res.result.items[0];
+  } else {
+
+  // If there is no event at that time with that name,
+  // this is the first time this user logged in.
+  // So let's establish an event there with an empty description. 
+    res = await addEvent(new tu.Appt(
+      "habit3-roles-1",
+      { duration: 1, description: "[]" },
+      new Date('2024-06-13T01:00:00.000Z').getTime()
+    ));
+    // console.log("getRoles res2", res);
+    return res;
+  }
+}
+
 async function getUser() {
   console.log("getAvatar()");
   let response = await gapi.client.people.people.get({
@@ -115,26 +147,31 @@ async function getUser() {
 }
 
 export async function addEvent(appt) {
-  const event = {
-    'summary': appt.summary,
-    'start': {
-      'dateTime': appt.startDateISO,
-      'timeZone': 'America/New_York'
-    },
-    'end': {
-      'dateTime': appt.endDateISO,
-      'timeZone': 'America/New_York'
-    },
-  };
-
   const request = {
     'calendarId': 'primary',
-    'resource': event
+    'resource': appt.gEventResource
+  };
+  // console.log("request", request);
+  let res = await gapi.client.calendar.events.insert(request);
+  console.log("addEvent", res);
+  if (typeof res.result !== undefined) {
+    return res.result
   }
-  console.log("request", request);
-  let res = await gapi.client.calendar.events.insert(request)
+}
 
-  console.log("response", res);
+export async function updateEvent(appt) {
+  console.log("updateEvent");
+  const request = {
+    'calendarId': 'primary',
+    'eventId': appt.id,
+    'sendUpdates': 'none',
+    'resource': appt.gEventResource // "body"?
+  };
+  let res = await gapi.client.calendar.events.patch(request);
+  console.log("patchEvent", res);
+  if (typeof res.result !== undefined) {
+    return res.result;
+  }
 }
 
 export function isClientReady() { return isReady; }

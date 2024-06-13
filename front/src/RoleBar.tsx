@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import Role from './Role';
 import { addRoleAction } from './rolesReducer';
 
-const RoleBar = ({ roles, dispatch }) => {
+const RoleBar = ({ roles, dispatch, save }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEditing = () => {
+    // transitioning from editing to not editing, save roles to google.
+    if (isEditing) {
+      save();
+    }
     setIsEditing(!isEditing);
   };
 

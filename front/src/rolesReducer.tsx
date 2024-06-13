@@ -1,6 +1,13 @@
+import { Appt } from "./calendar/utils/timeUtils";
+
+let localRolesAppt: Appt;
 
 export default function rolesReducer(roles, action) {
   switch (action.type) {
+    case "replaceAll": {
+      return  action.newRoles;
+      
+    };
     case "addRole": {
       const newRole = {
         id: roles.length + 1,
@@ -57,6 +64,13 @@ export default function rolesReducer(roles, action) {
       return roles;
     };
   }
+}
+
+export function replaceAllRoles(fetchedRolesAppt: Appt) {
+  console.log("replaceAllRoles", fetchedRolesAppt);
+  localRolesAppt = fetchedRolesAppt;
+  const newRoles = JSON.parse(fetchedRolesAppt.description);
+  return { type: "replaceAll", newRoles, skipSync: true };
 }
 
 export function addRoleAction() {

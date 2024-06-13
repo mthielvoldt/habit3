@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './Header';
 import RoleBar from './RoleBar';
 import './App.css';
-import rolesReducer from './rolesReducer';
+import rolesReducer, {replaceAllRoles} from './rolesReducer';
 import Calendar from './calendar/Calendar';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -12,6 +12,7 @@ import * as tu from "./calendar/utils/timeUtils"
 
 const noUser = {name: "", avatar: ""};
 const noAppts: tu.Appt[] = [];
+let rolesAppt: tu.Appt;
 
 function App({ initialRoles }) {
   const [roles, dispatch] = useReducer(rolesReducer, initialRoles);
@@ -19,9 +20,10 @@ function App({ initialRoles }) {
   const [user, setUser] = useState(noUser);
   useEffect(syncGoogle, []);
 
-  function addAppt(newAppt: tu.Appt) {
-    gcal.addEvent(newAppt);
-    setAppts([...appts, newAppt]);
+  async function addAppt(newAppt: tu.Appt) {
+    const newApptWithID = tu.apptFromGEvent(await gcal.addEvent(newAppt));
+    setAppts([...appts, newApptWithID]);
+    console.log("newAppt", newApptWithID);
   }
 
   function syncGoogle() {
@@ -31,11 +33,13 @@ function App({ initialRoles }) {
       if (ignore) {
         console.log("This sync call ignored, aborting fetch attempts.");
       } else if (gcal.isClientReady()) {
-        const {events, user} = await gcal.fetchEvents(); // a promise
+        const {events, user, rolesEvent} = await gcal.fetchEvents(); // a promise
         // TODO: handle ignore if it comes after fetch request is sent.
         replaceAppts(events);
         console.log("user:", user);
         setUser(user);
+        rolesAppt = tu.apptFromGEvent(rolesEvent)
+        dispatch(replaceAllRoles(rolesAppt));
       } else {
         console.log("Schedule fetch retry for later.");
         setTimeout(fetchWhenReady, 500);
@@ -46,6 +50,11 @@ function App({ initialRoles }) {
       console.log('Ignoring this call to sync.');
       ignore = true;
     }
+  }
+
+  function saveRoles() {
+    rolesAppt.description = JSON.stringify(roles);
+    gcal.updateEvent(rolesAppt);
   }
 
   function replaceAppts(events) {
@@ -71,6 +80,7 @@ function App({ initialRoles }) {
           <RoleBar
             roles={roles}
             dispatch={dispatch}
+            save={saveRoles}
           />
           <Calendar appts={appts} addAppt={addAppt} />
         </DndProvider>

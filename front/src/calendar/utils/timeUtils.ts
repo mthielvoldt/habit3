@@ -17,15 +17,19 @@ This is a convenient display since our appointments all appear relative to the w
 */
 export class Appt {
   summary: string;
+  description: string;
+  id: string;
   start: number;  // time
   durationMinutes: number;
 
   constructor(
     summary: string = "",
-    { days = 0, hours = 0, minutes = 0, duration = 60 },
+    {id = "", days = 0, hours = 0, minutes = 0, duration = 60, description = "" },
     baseTime: number = Date.now()) {
-    this.summary = summary,
-      this.start = offsetTime({ days, hours, minutes }, baseTime);
+    this.summary = summary;
+    this.description = description;
+    this.id = id;
+    this.start = offsetTime({ days, hours, minutes }, baseTime);
     this.durationMinutes = duration;
   };
 
@@ -39,13 +43,28 @@ export class Appt {
   get endDateISO(): string {
     return (new Date(this.start + (60 * 1000 * this.durationMinutes)).toISOString());
   }
+  get gEventResource(): object {
+    const result = {
+      'summary': this.summary,
+      'start': {
+        'dateTime': this.startDateISO,
+      },
+      'end': {
+        'dateTime': this.endDateISO,
+      },
+      'description': this.description
+    };
+    if (this.id !== "") {
+      result["id"] = this.id;
+    }
+    return result;
+  }
 };
 
 export function apptFromGEvent(gEvent): Appt {
-  const result = new Appt(gEvent.summary, {});
-  result.start = new Date(gEvent.start.dateTime).getTime();
-  result.durationMinutes = (new Date(gEvent.end.dateTime).getTime() - result.start) / 60000;
-  return result;
+  const startTime = new Date(gEvent.start.dateTime).getTime();
+  const duration = (new Date(gEvent.end.dateTime).getTime() - startTime) / 60000;
+  return new Appt(gEvent.summary, {id: gEvent.id, description: gEvent.description, duration: duration}, startTime);
 }
 
 export function getPrevMidnight(time: number): number {
