@@ -16,6 +16,7 @@ OffsetAppt presents an appointment in a way that reframes it as relative to a ba
 This is a convenient display since our appointments all appear relative to the week start.
 */
 export class Appt {
+  type: string = "Appt";
   summary: string;
   description: string;
   id: string;
@@ -110,6 +111,6 @@ export function getSummariesAsString(appts: Appt[]) {
   return appts.reduce((accum: string, result) => (accum + result.summary), "");
 }
 
-function offsetTime(offset: Offset, baseTime: number): number {
-  return baseTime + 60000 * (offset.minutes + 60 * (offset.hours + 24 * offset.days));
+export function offsetTime({days=0, hours=0, minutes=0}, baseTime: number): number {
+  return baseTime + 60000 * (minutes + 60 * (hours + 24 * days));
 }

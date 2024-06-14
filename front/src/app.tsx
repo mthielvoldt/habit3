@@ -26,6 +26,17 @@ function App({ initialRoles }) {
     console.log("newAppt", newApptWithID);
   }
 
+  async function updateApptTime(apptId: string, newStartTime: number, newEndTime: number) {
+    // 
+    const start = {dateTime: new Date(newStartTime).toISOString()};
+    const end = {dateTime: new Date(newEndTime).toISOString()};
+    const updatedAppt = tu.apptFromGEvent(await gcal.patchEvent(apptId, {start, end}));
+
+    // Create a copy of appts[] without mutating the original.
+    const newAppts = appts.map( appt => ((appt.id === apptId) ? updatedAppt : appt));
+    setAppts(newAppts);
+  }
+
   function syncGoogle() {
     let ignore = false;
 
@@ -82,7 +93,7 @@ function App({ initialRoles }) {
             dispatch={dispatch}
             save={saveRoles}
           />
-          <Calendar appts={appts} addAppt={addAppt} />
+          <Calendar appts={appts} addAppt={addAppt} updateApptTime={updateApptTime} />
         </DndProvider>
       </main>
       <footer className="footer bg-light py-3 mt-auto">

@@ -5,7 +5,7 @@ import './App.css';
 const Rock = ({ rock, isEditing, updateRockText, deleteRock }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'rock',
-    item: rock,
+    item: {...rock, type: "rock"},
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

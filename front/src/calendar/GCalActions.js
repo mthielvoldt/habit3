@@ -159,6 +159,7 @@ export async function addEvent(appt) {
   }
 }
 
+// TODO: make this an actual update call, and not a patch call.
 export async function updateEvent(appt) {
   console.log("updateEvent");
   const request = {
@@ -166,6 +167,21 @@ export async function updateEvent(appt) {
     'eventId': appt.id,
     'sendUpdates': 'none',
     'resource': appt.gEventResource // "body"?
+  };
+  let res = await gapi.client.calendar.events.patch(request);
+  console.log("patchEvent", res);
+  if (typeof res.result !== undefined) {
+    return res.result;
+  }
+}
+
+export async function patchEvent(eventId, patch) {
+  console.log("patchEvent");
+  const request = {
+    'calendarId': 'primary',
+    'eventId': eventId,
+    'sendUpdates': 'none',
+    'resource': patch
   };
   let res = await gapi.client.calendar.events.patch(request);
   console.log("patchEvent", res);
