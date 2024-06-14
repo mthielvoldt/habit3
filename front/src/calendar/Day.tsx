@@ -3,7 +3,7 @@ import { useDrop } from "react-dnd";
 import * as ts from "./utils/timeUtils";
 import Appointment from "./Appointment";
 
-export default function Day({ dayIndex, appts, addAppt, updateApptTime }) {
+export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAppt }) {
   const [shadowYOffset, setShadowYOffset] = useState(0);
   const [dims, setDims] = useState({ width: 0, height: 0 });
   const ref = useRef(null);
@@ -73,6 +73,7 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime }) {
             depth={0}
             position={0}
             dayDimensions={dims}
+            deleteAppt={deleteAppt}
           />
         )}
         <div className="shadow-event"

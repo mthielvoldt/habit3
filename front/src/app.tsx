@@ -3,14 +3,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './Header';
 import RoleBar from './RoleBar';
 import './App.css';
-import rolesReducer, {replaceAllRoles} from './rolesReducer';
+import rolesReducer, { replaceAllRoles } from './rolesReducer';
 import Calendar from './calendar/Calendar';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as gcal from './calendar/GCalActions';
 import * as tu from "./calendar/utils/timeUtils"
 
-const noUser = {name: "", avatar: ""};
+const noUser = { name: "", avatar: "" };
 const noAppts: tu.Appt[] = [];
 let rolesAppt: tu.Appt;
 
@@ -28,13 +28,21 @@ function App({ initialRoles }) {
 
   async function updateApptTime(apptId: string, newStartTime: number, newEndTime: number) {
     // 
-    const start = {dateTime: new Date(newStartTime).toISOString()};
-    const end = {dateTime: new Date(newEndTime).toISOString()};
-    const updatedAppt = tu.apptFromGEvent(await gcal.patchEvent(apptId, {start, end}));
+    const start = { dateTime: new Date(newStartTime).toISOString() };
+    const end = { dateTime: new Date(newEndTime).toISOString() };
+    const updatedAppt = tu.apptFromGEvent(await gcal.patchEvent(apptId, { start, end }));
 
     // Create a copy of appts[] without mutating the original.
-    const newAppts = appts.map( appt => ((appt.id === apptId) ? updatedAppt : appt));
+    const newAppts = appts.map(appt => ((appt.id === apptId) ? updatedAppt : appt));
     setAppts(newAppts);
+  }
+
+  async function deleteAppt(apptId: string) {
+    console.log("deleteAppt id:", apptId);
+    const success = await gcal.deleteEvent(apptId);
+    if (success) {
+      setAppts(appts.filter(appt => (appt.id !== apptId)));
+    }
   }
 
   function syncGoogle() {
@@ -44,7 +52,7 @@ function App({ initialRoles }) {
       if (ignore) {
         console.log("This sync call ignored, aborting fetch attempts.");
       } else if (gcal.isClientReady()) {
-        const {events, user, rolesEvent} = await gcal.fetchEvents(); // a promise
+        const { events, user, rolesEvent } = await gcal.fetchEvents(); // a promise
         // TODO: handle ignore if it comes after fetch request is sent.
         replaceAppts(events);
         console.log("user:", user);
@@ -85,7 +93,7 @@ function App({ initialRoles }) {
 
   return (
     <>
-      <Header signOut={signOut} user={user}/>
+      <Header signOut={signOut} user={user} />
       <main id="main-content">
         <DndProvider backend={HTML5Backend}>
           <RoleBar
@@ -93,7 +101,7 @@ function App({ initialRoles }) {
             dispatch={dispatch}
             save={saveRoles}
           />
-          <Calendar appts={appts} addAppt={addAppt} updateApptTime={updateApptTime} />
+          <Calendar appts={appts} addAppt={addAppt} updateApptTime={updateApptTime} deleteAppt={deleteAppt} />
         </DndProvider>
       </main>
       <footer className="footer bg-light py-3 mt-auto">

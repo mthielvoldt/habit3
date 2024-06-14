@@ -119,9 +119,9 @@ async function getRoles() {
     return res.result.items[0];
   } else {
 
-  // If there is no event at that time with that name,
-  // this is the first time this user logged in.
-  // So let's establish an event there with an empty description. 
+    // If there is no event at that time with that name,
+    // this is the first time this user logged in.
+    // So let's establish an event there with an empty description. 
     res = await addEvent(new tu.Appt(
       "habit3-roles-1",
       { duration: 1, description: "[]" },
@@ -161,7 +161,6 @@ export async function addEvent(appt) {
 
 // TODO: make this an actual update call, and not a patch call.
 export async function updateEvent(appt) {
-  console.log("updateEvent");
   const request = {
     'calendarId': 'primary',
     'eventId': appt.id,
@@ -169,14 +168,13 @@ export async function updateEvent(appt) {
     'resource': appt.gEventResource // "body"?
   };
   let res = await gapi.client.calendar.events.patch(request);
-  console.log("patchEvent", res);
+  console.log("update(patch)Event", res);
   if (typeof res.result !== undefined) {
     return res.result;
   }
 }
 
 export async function patchEvent(eventId, patch) {
-  console.log("patchEvent");
   const request = {
     'calendarId': 'primary',
     'eventId': eventId,
@@ -188,6 +186,17 @@ export async function patchEvent(eventId, patch) {
   if (typeof res.result !== undefined) {
     return res.result;
   }
+}
+
+export async function deleteEvent(eventId) {
+  const request = {
+    'calendarId': 'primary',
+    'eventId': eventId,
+    'sendUpdates': 'none'
+  };
+  let res = await gapi.client.calendar.events.delete(request);
+  console.log("deleteEvent", res);
+  return res.status === 204;
 }
 
 export function isClientReady() { return isReady; }
