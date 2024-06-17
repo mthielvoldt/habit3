@@ -16,7 +16,6 @@ OffsetAppt presents an appointment in a way that reframes it as relative to a ba
 This is a convenient display since our appointments all appear relative to the week start.
 */
 export class Appt {
-  type: string = "Appt";
   summary: string;
   description: string;
   id: string;

@@ -4,7 +4,7 @@ import * as ts from "./utils/timeUtils";
 import Appointment from "./Appointment";
 
 export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAppt }) {
-  const [shadowYOffset, setShadowYOffset] = useState(0);
+  const [pointerYInDay, setpointerYInDay] = useState(0);
   const [dims, setDims] = useState({ width: 0, height: 0 });
   const ref = useRef(null);
   useEffect(() => {
@@ -12,16 +12,16 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
       setDims({ width: ref.current.offsetWidth, height: ref.current.offsetHeight });
     }
   }, [ref.current]);
-  const [{ isOver }, drop] = useDrop(() => ({
+  const [{ isOver, dragItemType }, drop] = useDrop(() => ({
     // The type (or types) to accept - strings or symbols
-    accept: ['appt', 'rock'],
+    accept: ['appt', 'rock', 'end-time'],
     // Props to collect
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
+      dragItemType: monitor.getItemType()
     }),
     drop: handleDrop
-  }), [shadowYOffset])
+  }), [pointerYInDay])
 
   const allAppts: ts.Appt[] = appts;
   // filter for just this day's appointments;
@@ -30,23 +30,31 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
   const dayEnd = ts.addDays(dayStart, 1);
   const todaysAppts = ts.getApptsInWindow(allAppts, { start: dayStart, end: dayEnd });
 
-  function handleDrop(item: any) {
-    switch (item.type) {
+  function handleDrop(item: any, monitor) {
+    switch (monitor.getItemType()) {
       case "rock": {
         console.log("rock dropped");
-        const newAppt = new ts.Appt(item.text, { hours: shadowYOffset / 40 }, dayStart);
+        const newAppt = new ts.Appt(item.text, { hours: pointerYInDay / 40 }, dayStart);
         addAppt(newAppt);
         break;
       }
-      case "Appt": {
-        console.log("Appt dropped");
-        const newStart = ts.offsetTime({hours: shadowYOffset / 40}, dayStart);
-        const newEndTime = ts.offsetTime({minutes: item.durationMinutes}, newStart);
+      case "appt": {
+        console.log("appt dropped");
+        const newStart = ts.offsetTime({ hours: pointerYInDay / 40 }, dayStart);
+        const newEndTime = ts.offsetTime({ minutes: item.durationMinutes }, newStart);
         updateApptTime(item.id, newStart, newEndTime);
         break;
       }
+      case "end-time": {
+        console.log("end-time dropped for appt Id:", item.id);
+        const newEndTime = ts.offsetTime({ hours: pointerYInDay / 40}, dayStart);
+        if (newEndTime - item.start > 15*60000) {
+          updateApptTime(item.id, item.start, newEndTime);
+        }
+        break;
+      }
       default: {
-        console.log("unexpected item type in handleDrop():", item);
+        console.log("unexpected item type in handleDrop():", monitor.getItemType(), item);
       }
     }
     // console.log({ shadowYOffset, dims, item });
@@ -55,7 +63,12 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
   function handleDragOver(event) {
     const yOffset = document.getElementById('calendar-events').getBoundingClientRect().top;
     // console.log({yOffset, mousey: event.clientY});
-    setShadowYOffset(event.clientY - yOffset);
+    const localY = event.clientY - yOffset;
+    setpointerYInDay(localY);
+
+  }
+  function getShadowVisibility() {
+    return isOver && ['appt', 'rock'].includes(dragItemType)? 'visible' : 'hidden'
   }
 
   return (
@@ -77,7 +90,7 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
           />
         )}
         <div className="shadow-event"
-          style={{ top: shadowYOffset.toString() + 'px', visibility: isOver ? 'visible' : 'hidden' }}
+          style={{ top: pointerYInDay.toString() + 'px', visibility: getShadowVisibility()  }}
         />
       </div>
     </div>
