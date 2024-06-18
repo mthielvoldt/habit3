@@ -90,12 +90,18 @@
 }
 
 .appointment{
+  display: flex;
+  flex-direction: column;
   position: absolute;
   z-index: 1;
   background-color: #e8ffda;
   border-style: solid solid solid solid;
   border-radius: 6px;
   text-align: center;
+}
+
+.appointment .draggable{
+  flex-grow: 1;
 }
 
 .appt-trash {
@@ -109,9 +115,15 @@
 }
 
 .appt-resize{
-  position: absolute;
+  max-height: 12px;
+  /* position: absolute;
   bottom: -6px;
   left: 50%;
   transform: translate(-50%, 0%);
-  padding: 0 15px 0 15px;
+  padding: 0 15px 0 15px; */
+}
+
+.appt-resize svg{
+  position: relative;
+  top: -7px;
 }

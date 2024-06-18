@@ -12,13 +12,12 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
       setDims({ width: ref.current.offsetWidth, height: ref.current.offsetHeight });
     }
   }, [ref.current]);
-  const [{ isOver, dragItemType }, drop] = useDrop(() => ({
+  const [{ isOver }, drop] = useDrop(() => ({
     // The type (or types) to accept - strings or symbols
-    accept: ['appt', 'rock', 'end-time'],
+    accept: ['appt', 'rock'],
     // Props to collect
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      dragItemType: monitor.getItemType()
     }),
     drop: handleDrop
   }), [pointerYInDay])
@@ -45,14 +44,6 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
         updateApptTime(item.id, newStart, newEndTime);
         break;
       }
-      case "end-time": {
-        console.log("end-time dropped for appt Id:", item.id);
-        const newEndTime = ts.offsetTime({ hours: pointerYInDay / 40}, dayStart);
-        if (newEndTime - item.start > 15*60000) {
-          updateApptTime(item.id, item.start, newEndTime);
-        }
-        break;
-      }
       default: {
         console.log("unexpected item type in handleDrop():", monitor.getItemType(), item);
       }
@@ -68,7 +59,7 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
 
   }
   function getShadowVisibility() {
-    return isOver && ['appt', 'rock'].includes(dragItemType)? 'visible' : 'hidden'
+    return isOver ? 'visible' : 'hidden';
   }
 
   return (
@@ -87,6 +78,7 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
             position={0}
             dayDimensions={dims}
             deleteAppt={deleteAppt}
+            updateApptTime={updateApptTime}
           />
         )}
         <div className="shadow-event"
