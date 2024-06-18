@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Appt, offsetTime } from "./utils/timeUtils";
 import { useDrag } from "react-dnd";
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -13,27 +13,26 @@ export default function Appointment({ appt, dayStart, depth, position, dayDimens
     deleteAppt: (apptId: string) => null;
     updateApptTime: (apptId: string, newStartTime: number, newEndTime: number) => null;
   }) {
-  const initialHeight = appt.durationMinutes / (24 * 60) * dayDimensions.height;
-  const [height, setHeight] = useState(initialHeight);
+  const getHeightFromDuration = () => appt.durationMinutes / (24 * 60) * dayDimensions.height;
+  const [height, setHeight] = useState(getHeightFromDuration());
   const [{ }, dragAppt] = useDrag(() => ({
     type: 'appt',
     item: appt,
     collect: (monitor) => ({}),
   }), [appt]);
-  // const [{ }, dragDuration] = useDrag(() => ({
-  //   type: 'end-time',
-  //   item: { id: appt.id, start: appt.start },
-  //   collect: (monitor) => ({}),
-  // }), [appt]);
+
+  // Update height if the day's duration changes.  Need this because the height state obscures
+  // the dependency on appt.durationMinutes.
+  useEffect( () => setHeight(getHeightFromDuration), [appt.durationMinutes]);
 
 
   let topVal = (appt.start - dayStart) / (24 * 3600 * 1000) * dayDimensions.height;
 
-  function handleResizeStart(e) {
+  function handleResizeStart(ev) {
     // This doesn't depend on Appointment state, so we can link it directly to the document,
     // (and not link to this component) since it doesn't need to be updated Appt state changes.
     document.onpointermove = handleResizeDrag;
-    document.onpointerup = handleOutsideStop;
+    document.onpointerup = resetToPreResizeState;
   }
 
   function handleResizeDrag(ev) {
@@ -48,9 +47,8 @@ export default function Appointment({ appt, dayStart, depth, position, dayDimens
     // this function gets updated with new height state because it's linked to the component.
     ev.preventDefault();
     console.log("end-time dropped for appt Id:", appt.id, " height: ", height);
-    handleOutsideStop(ev);
     const newDurationMins = height / 40 * 60;
-    // setHeight(initialHeight);   // replace initial until gCal API confirms the update.
+    resetToPreResizeState();
     if (newDurationMins > 15) {
       const newEndTime = offsetTime({ minutes: newDurationMins }, appt.start);
       console.log("newEndTime: ", new Date(newEndTime));
@@ -58,11 +56,10 @@ export default function Appointment({ appt, dayStart, depth, position, dayDimens
     }
   }
 
-  function handleOutsideStop(ev) {
-    console.log("pointer up outside.")
+  function resetToPreResizeState() {
     document.onpointermove = null;
     document.onpointerup = null;
-    setHeight(height);
+    setHeight(getHeightFromDuration());
   }
 
   const height_str = height.toString() + 'px';
