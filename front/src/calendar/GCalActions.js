@@ -1,8 +1,16 @@
 import * as tu from './utils/timeUtils'
 
 // TODO BEFORE HOSTING: Move this to server.
-const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+let CLIENT_ID, API_KEY;
+try {
+  // Test Keys, may be used with localhost.
+  CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+} catch {
+  // Production keys, restricted to production origin.
+  CLIENT_ID = "889236019594-9gj2sn0rrvm5ob6t06do0gpj1dn70sgn.apps.googleusercontent.com";
+  API_KEY = "AIzaSyAVy3xWYcWovXytd74F6lvL7Q8y4U-CMS4";
+}
 
 // Discovery doc URL for APIs used by the quickstart
 const CALENDAR_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
