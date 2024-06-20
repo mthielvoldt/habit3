@@ -17,7 +17,7 @@ function Header({ signOut, user }) {
         </ul>
         <div className="btn-group dropstart ms-auto me-2">
           <a className='dropdown-toggle' data-bs-toggle='dropdown' aria-expanded="false">
-            <img src={user.avatar} alt="Avatar" className="rounded-circle" width="40" height="40" />
+            <img src={user.avatar} crossOrigin='anonymous' alt="Avatar" className="rounded-circle" width="40" height="40" />
           </a>
           <ul className="dropdown-menu" aria-labelledby="userWidget">
             <li><a className="dropdown-item" href="#">Settings</a></li>
