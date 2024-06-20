@@ -23,7 +23,7 @@ export default function Appointment({ appt, dayStart, depth, position, dayDimens
 
   // Update height if the day's duration changes.  Need this because the height state obscures
   // the dependency on appt.durationMinutes.
-  useEffect( () => setHeight(getHeightFromDuration), [appt.durationMinutes]);
+  useEffect(() => setHeight(getHeightFromDuration), [appt.durationMinutes]);
 
 
   let topVal = (appt.start - dayStart) / (24 * 3600 * 1000) * dayDimensions.height;
@@ -32,34 +32,31 @@ export default function Appointment({ appt, dayStart, depth, position, dayDimens
     // This doesn't depend on Appointment state, so we can link it directly to the document,
     // (and not link to this component) since it doesn't need to be updated Appt state changes.
     document.onpointermove = handleResizeDrag;
-    document.onpointerup = resetToPreResizeState;
+    document.onpointerup = handleResizeStop;
+  }
+
+  function getNewHeight(ev) {
+    const dayTop = document.getElementById('calendar-events').getBoundingClientRect().top;
+    const newHeight = ev.clientY - dayTop - topVal + 5;
+    // console.log("pageY: ", ev.clientY, "dayTop:", dayTop, " topVal: ", topVal, " newHeight: ", newHeight);
+    return newHeight;
   }
 
   function handleResizeDrag(ev) {
     ev.preventDefault();
-    const dayTop = document.getElementById('calendar-events').getBoundingClientRect().top;
-    const newHeight = ev.clientY - dayTop - topVal + 5;
-    console.log("pageY: ", ev.clientY, "dayTop:", dayTop, " topVal: ", topVal, " newHeight: ", newHeight);
-    setHeight(newHeight);
+    setHeight(getNewHeight(ev));
   }
 
   function handleResizeStop(ev) {
     // this function gets updated with new height state because it's linked to the component.
     ev.preventDefault();
-    console.log("end-time dropped for appt Id:", appt.id, " height: ", height);
-    const newDurationMins = height / 40 * 60;
-    resetToPreResizeState();
-    if (newDurationMins > 15) {
-      const newEndTime = offsetTime({ minutes: newDurationMins }, appt.start);
-      console.log("newEndTime: ", new Date(newEndTime));
-      updateApptTime(appt.id, appt.start, newEndTime);
-    }
-  }
-
-  function resetToPreResizeState() {
     document.onpointermove = null;
     document.onpointerup = null;
-    setHeight(getHeightFromDuration());
+    console.log("end-time dropped for appt Id:", appt.id);
+    const newDurationMins = Math.max(getNewHeight(ev) / 40 * 60, 15);
+    const newEndTime = offsetTime({ minutes: newDurationMins }, appt.start);
+    console.log("newEndTime: ", new Date(newEndTime));
+    updateApptTime(appt.id, appt.start, newEndTime);
   }
 
   const height_str = height.toString() + 'px';
@@ -77,7 +74,7 @@ export default function Appointment({ appt, dayStart, depth, position, dayDimens
           </svg>
         </a>
       </div>
-      <div className="appt-resize" onPointerDown={handleResizeStart} onPointerUp={handleResizeStop}>
+      <div className="appt-resize" onPointerDown={handleResizeStart}>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-grip-horizontal" viewBox="0 0 16 16">
           <path d="M2 8a1 1 0 1 1 0 2 1 1 0 0 1 0-2m0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2m3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2m0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2m3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2m0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2m3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2m0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2m3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2m0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
         </svg>
