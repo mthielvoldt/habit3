@@ -19,15 +19,37 @@ const PEOPLE_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/peopl
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
 const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.profile';
-
-let tokenClient = google.accounts.oauth2.initTokenClient({
-  client_id: CLIENT_ID,
-  scope: SCOPES,
-  callback: '', // defined later
-});
+// let loadState = 'GOOGLE_SCRIPTS_LOADING';
 let isReady = false;
+let tokenClient;
 
-gapi.load('client', initializeGapiClient);
+function initGoogleClients() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: '', // defined later
+  });
+
+  gapi.load('client', initializeGapiClient);
+}
+async function initializeGapiClient() {
+  await gapi.client.init({
+    apiKey: API_KEY,
+    discoveryDocs: [CALENDAR_DISCOVERY_DOC, PEOPLE_DISCOVERY_DOC],
+  });
+  isReady = true;
+}
+
+/* This function is called periodically until it returns true to signify API access is ready.
+*/
+let runOnce = false;
+export function isClientReady() {
+  if (!runOnce && (typeof gapi !== undefined && typeof google !== undefined)) {
+    runOnce = true;
+    initGoogleClients();
+  }
+  return isReady;
+}
 
 /**
  *  Sign in the user upon button click.
@@ -207,20 +229,11 @@ export async function deleteEvent(eventId) {
   return res.status === 204;
 }
 
-export function isClientReady() { return isReady; }
-
 /**
  * Callback after the API client is loaded. Loads the
  * discovery doc to initialize the API.
  */
-async function initializeGapiClient() {
 
-  await gapi.client.init({
-    apiKey: API_KEY,
-    discoveryDocs: [CALENDAR_DISCOVERY_DOC, PEOPLE_DISCOVERY_DOC],
-  });
-  isReady = true;
-}
 
 function storeToken() {
   const token = JSON.stringify(gapi.client.getToken());
