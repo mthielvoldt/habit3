@@ -63,7 +63,12 @@ export default function Appointment({ appt, dayStart, depth, position, dayDimens
   const top_str = topVal.toString() + 'px';
   const width_str = dayDimensions.width.toString() + 'px';
 
-  return (
+
+  return (appt.rockId === "") ?
+    <div className="appointment immutable" style={{ top: top_str, height: height_str, width: width_str }}>
+      <span>{appt.summary}</span>
+    </div>
+    :
     <div className="appointment" style={{ top: top_str, height: height_str, width: width_str }}>
       <div ref={dragAppt} className="draggable">
         <span>{appt.summary}</span>
@@ -80,5 +85,4 @@ export default function Appointment({ appt, dayStart, depth, position, dayDimens
         </svg>
       </div>
     </div>
-  )
 }

@@ -19,16 +19,18 @@ export class Appt {
   summary: string;
   description: string;
   id: string;
+  rockId: string;
   start: number;  // time
   durationMinutes: number;
 
   constructor(
     summary: string = "",
-    {id = "", days = 0, hours = 0, minutes = 0, duration = 60, description = "" },
+    { id = "", days = 0, hours = 0, minutes = 0, duration = 60, description = "", rockId = "" },
     baseTime: number = Date.now()) {
     this.summary = summary;
-    this.description = description;
+    this.description = (rockId === "") ? description : `rockId=${rockId}\n${description}`;
     this.id = id;
+    this.rockId = rockId;
     this.start = offsetTime({ days, hours, minutes }, baseTime);
     this.durationMinutes = duration;
   };
@@ -64,7 +66,21 @@ export class Appt {
 export function apptFromGEvent(gEvent): Appt {
   const startTime = new Date(gEvent.start.dateTime).getTime();
   const duration = (new Date(gEvent.end.dateTime).getTime() - startTime) / 60000;
-  return new Appt(gEvent.summary, {id: gEvent.id, description: gEvent.description, duration: duration}, startTime);
+  const { rockId, description } = getRockIdIfPresent(gEvent);
+  return new Appt(
+    gEvent.summary,
+    { id: gEvent.id, description, duration: duration, rockId },
+    startTime);
+}
+
+function getRockIdIfPresent(gEvent) {
+  let rockId = ""
+  let description = gEvent.description;
+  if (typeof description == "string" && description.startsWith("rockId=")) {
+    rockId = description.split(/[=\n]/)[1];
+    description = description.substring(description.indexOf("\n") + 1);
+  }
+  return { rockId, description };
 }
 
 export function getPrevMidnight(time: number): number {
@@ -110,6 +126,6 @@ export function getSummariesAsString(appts: Appt[]) {
   return appts.reduce((accum: string, result) => (accum + result.summary), "");
 }
 
-export function offsetTime({days=0, hours=0, minutes=0}, baseTime: number): number {
+export function offsetTime({ days = 0, hours = 0, minutes = 0 }, baseTime: number): number {
   return baseTime + 60000 * (minutes + 60 * (hours + 24 * days));
 }

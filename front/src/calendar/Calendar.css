@@ -95,9 +95,15 @@
   position: absolute;
   z-index: 1;
   background-color: #e8ffda;
+  border-color: darkblue;
   border-style: solid solid solid solid;
   border-radius: 6px;
   text-align: center;
+}
+
+.immutable{
+  background-color: lightgrey;
+  border-color: darkslategrey;
 }
 
 .appointment .draggable{
