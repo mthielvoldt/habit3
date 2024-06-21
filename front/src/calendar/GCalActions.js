@@ -2,12 +2,14 @@ import * as tu from './utils/timeUtils'
 
 // TODO BEFORE HOSTING: Move this to server.
 let CLIENT_ID, API_KEY;
-try {
+if (import.meta.env.DEV) {
   // Test Keys, may be used with localhost.
+  console.log("Using Dev keys.")
   CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-} catch {
+} else {
   // Production keys, restricted to production origin.
+  console.log("Using Prod keys.");
   CLIENT_ID = "889236019594-9gj2sn0rrvm5ob6t06do0gpj1dn70sgn.apps.googleusercontent.com";
   API_KEY = "AIzaSyAVy3xWYcWovXytd74F6lvL7Q8y4U-CMS4";
 }
