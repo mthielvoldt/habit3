@@ -58,7 +58,7 @@ function App({ initialRoles }) {
         console.log("user:", user);
         setUser(user);
         rolesAppt = tu.apptFromGEvent(rolesEvent)
-        dispatch(replaceAllRoles(rolesAppt));
+        dispatch(replaceAllRoles(rolesAppt.description));
       } else {
         console.log("Schedule fetch retry for later.");
         setTimeout(fetchWhenReady, 500);
@@ -86,6 +86,7 @@ function App({ initialRoles }) {
     gcal.handleSignoutClick();
     setAppts(noAppts);
     setUser(noUser);
+    dispatch(replaceAllRoles("[]"));
     // setTimeout(syncGoogle, 1000);
     syncGoogle();
   }
