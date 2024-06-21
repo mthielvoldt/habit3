@@ -33,7 +33,7 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
     switch (monitor.getItemType()) {
       case "rock": {
         console.log("rock dropped");
-        const newAppt = new ts.Appt(item.text, { hours: pointerYInDay / 40 }, dayStart);
+        const newAppt = new ts.Appt(item.text, { hours: pointerYInDay / 40, rockId: item.id}, dayStart);
         addAppt(newAppt);
         break;
       }
