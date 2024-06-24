@@ -53,6 +53,23 @@ export function isClientReady() {
   return isReady;
 }
 
+function getNewToken() {
+  console.log("Requesting new access token.");
+  const tokenPromise = new Promise((resolve, reject) => {
+    tokenClient.callback = (resp) => {
+      if (resp.error !== undefined) {
+        reject(resp.error);
+      } else {
+        console.log("Token refreshed");
+        storeToken();
+        resolve(resp);
+      }
+    };
+    tokenClient.requestAccessToken({ prompt: '' });
+  });
+  return tokenPromise;
+}
+
 /**
  *  Sign in the user upon button click.
  */
@@ -61,40 +78,27 @@ export async function fetchEvents() {
   console.log("fetchEvents");
   retreiveToken();
 
+  events = await listWeeksEvents();
+  user = await getUser();
+  rolesEvent = await getRoles();
+  return { events, user, rolesEvent };
+}
+
+async function withToken(requestFn) {
+  let result;
   try {
-    events = await listWeeksEvents();
+    result = await requestFn();
   } catch {
     try {
-      console.log("Requesting new access token.");
-      const tokenPromise = new Promise((resolve, reject) => {
-        tokenClient.callback = (resp) => {
-          if (resp.error !== undefined) {
-            throw (resp);
-          }
-          // document.getElementById('signout_button').style.visibility = 'visible';
-          // document.getElementById('authorize_button').innerText = 'Refresh';
-          storeToken();
-          resolve(listWeeksEvents());
-        };
-        tokenClient.requestAccessToken({ prompt: '' });
-      });
-      events = await tokenPromise;
-    } catch {
+      await getNewToken();
+      result = await requestFn();
+    } catch(err) {
       // TODO: this doesn't work. 
-      console.error("Could not get new access token");
+      console.error("Could not get new access token", err);
+      alert("Habit3 can't reach your google account right now.");
     }
   }
-  try {
-    user = await getUser();
-  } catch (error) {
-    console.error("getUser", error);
-  }
-  try {
-    rolesEvent = await getRoles();
-  } catch (error) {
-    console.error("getRoles", error);
-  }
-  return { events, user, rolesEvent };
+  return result;
 }
 
 /**
@@ -128,7 +132,7 @@ async function listWeeksEvents() {
     'maxResults': 50,
     'orderBy': 'startTime',
   };
-  response = await gapi.client.calendar.events.list(request);
+  response = await withToken(() => gapi.client.calendar.events.list(request));
 
   if (!response.result.items || response.result.items.length == 0) {
     // Pop up a message that this account doesn't have any events.
@@ -137,15 +141,15 @@ async function listWeeksEvents() {
 }
 
 async function getRoles() {
-  let res
-  res = await gapi.client.calendar.events.list({
+  const request = {
     'calendarId': 'primary',
     'timeMin': '2024-06-13T00:00:00.000Z',
     'timeMax': '2024-06-14T00:00:00.000Z',
     'q': "habit3-roles-1",
     'showDeleted': false,
     'maxResults': 1,
-  });
+  };
+  let res = await withToken(() => gapi.client.calendar.events.list(request));
   // console.log("getRoles res1", res);
   if (res.result.items.length !== 0) {
     return res.result.items[0];
@@ -166,10 +170,11 @@ async function getRoles() {
 
 async function getUser() {
   console.log("getAvatar()");
-  let response = await gapi.client.people.people.get({
+  const request = {
     'resourceName': 'people/me',
     'personFields': 'names,photos'
-  });
+  };
+  let response = await withToken(() => gapi.client.people.people.get(request));
   console.log("getAvatar result", response.result);
 
   return {
@@ -184,7 +189,7 @@ export async function addEvent(appt) {
     'resource': appt.gEventResource
   };
   // console.log("request", request);
-  let res = await gapi.client.calendar.events.insert(request);
+  let res = await withToken(() => gapi.client.calendar.events.insert(request));
   console.log("addEvent", res);
   if (typeof res.result !== undefined) {
     return res.result
@@ -199,7 +204,7 @@ export async function updateEvent(appt) {
     'sendUpdates': 'none',
     'resource': appt.gEventResource // "body"?
   };
-  let res = await gapi.client.calendar.events.patch(request);
+  let res = await withToken(() => gapi.client.calendar.events.patch(request));
   console.log("update(patch)Event", res);
   if (typeof res.result !== undefined) {
     return res.result;
@@ -213,7 +218,7 @@ export async function patchEvent(eventId, patch) {
     'sendUpdates': 'none',
     'resource': patch
   };
-  let res = await gapi.client.calendar.events.patch(request);
+  let res = await withToken(() => gapi.client.calendar.events.patch(request));
   console.log("patchEvent", res);
   if (typeof res.result !== undefined) {
     return res.result;
@@ -226,7 +231,7 @@ export async function deleteEvent(eventId) {
     'eventId': eventId,
     'sendUpdates': 'none'
   };
-  let res = await gapi.client.calendar.events.delete(request);
+  let res = await withToken(() => gapi.client.calendar.events.delete(request));
   console.log("deleteEvent", res);
   return res.status === 204;
 }
