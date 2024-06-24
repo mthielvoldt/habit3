@@ -37,7 +37,7 @@ describe("Role bar controls", () => {
 
   it("can delete a Role.", () => {
     let roles = document.getElementsByClassName('role');
-    const firstRoleDeleteBtn = within(roles[0]).getByRole('button', {name: "Delete Role"});
+    const firstRoleDeleteBtn = within(roles[0]).getByRole('button', {name: "delete role"});
     const initialRoleCount = roles.length;
 
     fireEvent.click(firstRoleDeleteBtn);
