@@ -14,6 +14,9 @@ function Header({ signOut, user }) {
           <li className="nav-item">
             <a className="nav-link" href="#" id="aboutWidget">About</a>
           </li>
+          <li className="nav-item">
+            <a className="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLSe_VOaZU7HzO7Natn2TNHtQMJkJcW8MixDdI8dmdSy9n2OJNA/viewform?usp=sf_link" id="feedbackWidget">Feedback</a>
+          </li>
         </ul>
         <div className="btn-group dropstart ms-auto me-2">
           <a className='dropdown-toggle' data-bs-toggle='dropdown' aria-expanded="false">
