@@ -32,5 +32,5 @@ describe("Calendar", () => {
     ]);
     shadowsByRole = within(firstDay).queryAllByRole('tooltip', {});
     expect(shadowsByRole.length).toBe(1);
-  })
-})
+  });
+});

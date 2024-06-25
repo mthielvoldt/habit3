@@ -79,3 +79,31 @@ describe("Role bar controls", () => {
     expect(uniqueRockIds.size).toBe(2); // Ensure the rock IDs are unique
   });
 });
+
+describe.skip("Google calendar API", () => {
+  it("loads the standard rocks and roles from test account", () => {
+    // Authenticate with Google using test account (somehow).
+    // Check that the standard rocks are present after some time. 
+
+  });
+
+  it("refreshes token as needed to save rocks/role change", () => {
+    // Go into edit mode
+    // make a change
+    // expire the token. (somehow)
+    // Exit edit mode
+    // Expect a log saying refreshing token, then a confirmation indicating the save. 
+
+  });
+
+  it("shows warning when connection is lost with pending changes", () => {
+    // Edit mode
+    // make change
+    // Break the connection (somehow)
+    // Exit edit 
+    // Expect a warning. 
+    // Re-establish the connection (somehow).
+    // Expect an alert claiming the connection is fixed. 
+  });
+
+});
