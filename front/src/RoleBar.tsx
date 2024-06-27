@@ -19,13 +19,13 @@ const RoleBar = ({ roles, dispatch, save }) => {
 
   return (
     <aside id="sidebar" data-testid="rolebar-instance" className="bg-light border-right">
-      <div className="sidebar-header p-3 border-bottom d-flex justify-content-between align-items-center">
-        <span>Roles</span>
+      <div id="sidebar-header">
+        <h5>Life Roles</h5>
         <button id="editing-btn" className="btn btn-secondary btn-sm" onClick={toggleEditing}>
           {isEditing ? 'Stop Editing' : 'Edit All'}
         </button>
       </div>
-      <div className="p-3">
+      <div id="roles-container">
         {roles.map(role => (
           <Role
             key={role.id}

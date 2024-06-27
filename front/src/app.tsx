@@ -105,11 +105,6 @@ function App({ initialRoles }) {
           <Calendar appts={appts} addAppt={addAppt} updateApptTime={updateApptTime} deleteAppt={deleteAppt} />
         </DndProvider>
       </main>
-      <footer className="footer bg-light py-3 mt-auto">
-        <div className="container">
-          <span className="text-muted">© 2024 Weekly Planner. All rights reserved.</span>
-        </div>
-      </footer>
     </>
   );
 }

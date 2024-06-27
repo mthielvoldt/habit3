@@ -13,7 +13,8 @@
   flex-direction: row;
   background-color: aquamarine;
   border-bottom: solid 1px;
-  height: 40px;
+  min-height: 40px;
+  flex-grow: 0;
   width: calc(100% - var(--hour-axis-width));
   position: relative;
   left: var(--hour-axis-width);
@@ -36,7 +37,8 @@
 
 #hours-and-events{
   display: flex;
-  height: 100%;
+  flex-direction: row;
+  overflow-y: auto;
   background-color: cornflowerblue;
   position: relative; /*Makes this the width basis for hour-label::after gridlines*/
 }
@@ -44,6 +46,7 @@
 #hour-axis{
   background-color: bisque;
   min-width: var(--hour-axis-width);
+  height: fit-content;
   text-align: center;
 }
 
@@ -62,6 +65,7 @@
 }
 
 #calendar-events{
+  min-height: calc(40px * 24);
   display: flex;
   flex-direction: row;
   background-color: rgb(199, 230, 240);
