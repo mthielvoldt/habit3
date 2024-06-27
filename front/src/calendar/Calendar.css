@@ -80,6 +80,7 @@
   border-color: gray;
 }
 .day-inner{
+  position: relative;
   display: block;
   height: 100%;
 }

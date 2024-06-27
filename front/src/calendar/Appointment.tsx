@@ -61,7 +61,7 @@ export default function Appointment({ appt, dayStart, depth, position, dayDimens
 
   const height_str = height.toString() + 'px';
   const top_str = topVal.toString() + 'px';
-  const width_str = dayDimensions.width.toString() + 'px';
+  const width_str = '100%'; // TODO: make thishandle overlapping events. 
 
 
   return (appt.rockId === "") ?
