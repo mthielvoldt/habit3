@@ -15,7 +15,7 @@ const Role = ({ role, isEditing, dispatch }) => {
 
   return (
     <div className="role mb-3">
-      <div className="role-header d-flex justify-content-between align-items-center mb-2">
+      <div className="role-header mb-2 ms-2">
         {isEditing ?
           <div className='input-group'>
             <input

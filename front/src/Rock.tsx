@@ -16,7 +16,7 @@ const Rock = ({ rock, isEditing, updateRockText, deleteRock }) => {
   };
 
   return (
-    <div className="rock d-flex align-items-center mb-2" data-key={rock.id}>
+    <div className="rock" data-key={rock.id}>
       {isEditing ? 
         <div className='input-group'>
           <input
