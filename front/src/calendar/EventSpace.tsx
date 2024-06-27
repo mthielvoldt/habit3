@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import Day from "./Day";
 
-export default function EventSpace({days, appts, addAppt, updateApptTime, deleteAppt}) {
+export default function EventSpace({days, week, appts, addAppt, updateApptTime, deleteAppt}) {
   
 
   return (
@@ -10,6 +10,7 @@ export default function EventSpace({days, appts, addAppt, updateApptTime, delete
         <Day
           key={day.dayOfWeek}
           dayIndex={index}
+          week={week}
           appts={appts}
           addAppt={addAppt}
           updateApptTime={updateApptTime}

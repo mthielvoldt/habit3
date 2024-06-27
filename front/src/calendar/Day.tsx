@@ -3,7 +3,7 @@ import { useDrop } from "react-dnd";
 import * as ts from "./utils/timeUtils";
 import Appointment from "./Appointment";
 
-export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAppt }) {
+export default function Day({ dayIndex, week, appts, addAppt, updateApptTime, deleteAppt }) {
   const [pointerYInDay, setpointerYInDay] = useState(0);
   const [dims, setDims] = useState({ width: 0, height: 0 });
   const ref = useRef(null);
@@ -24,7 +24,7 @@ export default function Day({ dayIndex, appts, addAppt, updateApptTime, deleteAp
 
   const allAppts: ts.Appt[] = appts;
   // filter for just this day's appointments;
-  const weekStart = ts.getWeekStart(new Date());
+  const weekStart = ts.getWeekStart(new Date(), week);
   const dayStart = ts.addDays(weekStart, dayIndex);
   const dayEnd = ts.addDays(dayStart, 1);
   const todaysAppts = ts.getApptsInWindow(allAppts, { start: dayStart, end: dayEnd });

@@ -14,14 +14,14 @@ const days = [
   {dayOfWeek: "Sa"}
 ]
 
-export default function Calendar({ appts, addAppt, updateApptTime, deleteAppt }) {
+export default function Calendar({ appts, week, addAppt, updateApptTime, deleteAppt }) {
 
   return (
     <div id="calendar">
       <DayAxis days={days}/>
       <div id="hours-and-events">
         <HourAxis />
-        <EventSpace days={days} appts={appts} addAppt={addAppt} updateApptTime={updateApptTime} deleteAppt={deleteAppt} />
+        <EventSpace days={days} week={week} appts={appts} addAppt={addAppt} updateApptTime={updateApptTime} deleteAppt={deleteAppt} />
       </div>
     </div>
   )

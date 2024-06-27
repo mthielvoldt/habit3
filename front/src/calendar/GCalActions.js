@@ -71,12 +71,12 @@ function getNewToken() {
 /**
  *  Sign in the user upon button click.
  */
-export async function fetchEvents() {
+export async function fetchAll() {
   let events = [], user = { name: "", avatar: "" }, rolesEvent = [];
   console.log("fetchEvents");
   retreiveToken();
 
-  events = await listWeeksEvents();
+  events = await listWeeksEvents(0);
   user = await getUser();
   rolesEvent = await getRoles();
   return { events, user, rolesEvent };
@@ -99,6 +99,10 @@ async function withToken(requestFn) {
   return result;
 }
 
+export async function fetchEvents(weeksForward) {
+  return await listWeeksEvents(weeksForward);
+}
+
 /**
  *  Sign out the user upon button click.
  */
@@ -116,10 +120,10 @@ export function handleSignoutClick() {
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
-async function listWeeksEvents() {
+async function listWeeksEvents(weeksForward) {
   console.log("listWeeksEvents");
   let response;
-  const week = tu.getThisWeek();
+  const week = tu.getThisWeek(weeksForward);
 
   const request = {
     'calendarId': 'primary',

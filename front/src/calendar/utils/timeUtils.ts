@@ -99,13 +99,14 @@ function getToday(): Window {
   return { start, end };
 }
 
-export function getWeekStart(date: Date): number {
-  const thisTimePrevSunday = addDays(date.getTime(), -date.getDay());
+export function getWeekStart(baseDate: Date, weeksForward: number = 0): number {
+  const adjustedDate = new Date(offsetTime({ days: 7 * weeksForward }, baseDate.getTime()))
+  const thisTimePrevSunday = addDays(adjustedDate.getTime(), -adjustedDate.getDay());
   return getPrevMidnight(thisTimePrevSunday);
 }
 
-export function getThisWeek(): Window {
-  const start = getWeekStart(new Date());
+export function getThisWeek(weeksForward: number = 0): Window {
+  const start = getWeekStart(new Date(), weeksForward);
   const end = addDays(start, 7);
   return { start, end };
 }

@@ -73,3 +73,7 @@ body {
 .rock button {
   margin-right: 0.5rem;
 }
+
+.dropdown-toggle {
+  cursor:pointer;
+}

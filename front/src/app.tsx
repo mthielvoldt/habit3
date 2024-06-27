@@ -18,6 +18,7 @@ function App({ initialRoles }) {
   const [roles, dispatch] = useReducer(rolesReducer, initialRoles);
   const [appts, setAppts] = useState(noAppts);
   const [user, setUser] = useState(noUser);
+  const [week, setWeek] = useState(0);
   useEffect(syncGoogle, []);
 
   async function addAppt(newAppt: tu.Appt) {
@@ -52,7 +53,7 @@ function App({ initialRoles }) {
       if (ignore) {
         console.log("This sync call ignored, aborting fetch attempts.");
       } else if (gcal.isClientReady()) {
-        const { events, user, rolesEvent } = await gcal.fetchEvents(); // a promise
+        const { events, user, rolesEvent } = await gcal.fetchAll(); // a promise
         // TODO: handle ignore if it comes after fetch request is sent.
         replaceAppts(events);
         console.log("user:", user);
@@ -69,6 +70,25 @@ function App({ initialRoles }) {
       console.log('Ignoring this call to sync.');
       ignore = true;
     }
+  }
+
+  async function changeWeek(type: string) {
+    let newWeek = week;
+    switch (type) {
+      case "forward":
+        newWeek += 1;
+        break;
+      case "backward":
+        newWeek -= 1;
+        break;
+      case "reset":
+        newWeek = 0;
+        break;
+    }
+    const events = await gcal.fetchEvents(newWeek);
+    console.log("newWeek: ", newWeek);
+    replaceAppts(events);
+    setWeek(newWeek);
   }
 
   function saveRoles() {
@@ -94,7 +114,7 @@ function App({ initialRoles }) {
 
   return (
     <>
-      <Header signOut={signOut} user={user} />
+      <Header signOut={signOut} user={user} changeWeek={changeWeek} />
       <main id="main-content">
         <DndProvider backend={HTML5Backend}>
           <RoleBar
@@ -102,7 +122,7 @@ function App({ initialRoles }) {
             dispatch={dispatch}
             save={saveRoles}
           />
-          <Calendar appts={appts} addAppt={addAppt} updateApptTime={updateApptTime} deleteAppt={deleteAppt} />
+          <Calendar appts={appts} week={week} addAppt={addAppt} updateApptTime={updateApptTime} deleteAppt={deleteAppt} />
         </DndProvider>
       </main>
     </>
