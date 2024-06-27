@@ -17,7 +17,10 @@ function Header({ signOut, user, changeWeek }) {
             </a>
           </li>
           <li className="nav-item">
-            <a className="btn btn-light" href="https://docs.google.com/forms/d/e/1FAIpQLSe_VOaZU7HzO7Natn2TNHtQMJkJcW8MixDdI8dmdSy9n2OJNA/viewform?usp=sf_link"
+            <a className="btn btn-light"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSe_VOaZU7HzO7Natn2TNHtQMJkJcW8MixDdI8dmdSy9n2OJNA/viewform?usp=sf_link"
+              target="_blank"
+              rel="noopener noreferrer"
               id="feedbackWidget">
               Feedback
             </a>
