@@ -77,3 +77,8 @@ body {
 .dropdown-toggle {
   cursor:pointer;
 }
+
+#about-dropdown {
+  width: 400px;
+  padding: .5rem .5rem .5rem .5rem;
+}

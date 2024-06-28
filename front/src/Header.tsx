@@ -1,5 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/js/bootstrap';
+import Intro from './Intro';
 
 function Header({ signOut, user, changeWeek }) {
 
@@ -12,9 +13,7 @@ function Header({ signOut, user, changeWeek }) {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <a className="btn btn-light" href="#" id="aboutWidget">
-              About
-            </a>
+            <Intro></Intro>
           </li>
           <li className="nav-item">
             <a className="btn btn-light"
