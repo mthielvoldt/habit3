@@ -68,6 +68,7 @@ body {
   cursor: grab;
   padding: 8px;
   border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 .rock button {

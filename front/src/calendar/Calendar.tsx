@@ -17,7 +17,7 @@ const days = [
 export default function Calendar({ appts, week, addAppt, updateApptTime, deleteAppt }) {
 
   return (
-    <div id="calendar">
+    <div id="calendar" className="bg-light">
       <DayAxis days={days}/>
       <div id="hours-and-events">
         <HourAxis />

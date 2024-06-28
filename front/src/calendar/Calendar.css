@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   position: static;
-  background-color: cadetblue;
+  /* background-color: cadetblue; */
   width: 100%;
   --hour-axis-width: 40px;
 }
@@ -11,7 +11,7 @@
 #day-axis{
   display: flex;
   flex-direction: row;
-  background-color: aquamarine;
+  /* background-color: aquamarine; */
   border-bottom: solid 1px;
   min-height: 40px;
   flex-grow: 0;
@@ -24,7 +24,7 @@
   position: relative;
   flex-grow: 1;
   text-align: center;
-  border-style: none solid none solid;
+  /* border-style: none solid none solid; */
   border-width: 1px;
 }
 
@@ -39,12 +39,12 @@
   display: flex;
   flex-direction: row;
   overflow-y: auto;
-  background-color: cornflowerblue;
+  /* background-color: cornflowerblue; */
   position: relative; /*Makes this the width basis for hour-label::after gridlines*/
 }
 
 #hour-axis{
-  background-color: bisque;
+  /* background-color: bisque; */
   min-width: var(--hour-axis-width);
   height: fit-content;
   text-align: center;
@@ -68,7 +68,7 @@
   min-height: calc(40px * 24);
   display: flex;
   flex-direction: row;
-  background-color: rgb(199, 230, 240);
+  background-color: rgb(179, 234, 252);
   width: 100%;
 }
 
